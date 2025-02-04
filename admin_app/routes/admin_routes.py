@@ -3,6 +3,10 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from admin_app.admin import login_manager, db_admin
 from werkzeug.security import check_password_hash
 import pymongo
+import os 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from db.mongo_connection import get_mongo_connection 
 # Admin Blueprint
@@ -10,7 +14,8 @@ admin_bp = Blueprint('admin_routes', __name__)
 
 
 #admin connections
-db_admin = get_mongo_connection()  # ✅ Ensure this is correct
+mongo_admin_uri = os.getenv("MONGO_URI_ADMIN")
+
 
 # Use the correct collection reference
 admin_collection = db_admin["Admin"]

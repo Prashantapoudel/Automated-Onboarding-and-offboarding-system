@@ -10,9 +10,9 @@ __pycache__/
 # Ignore database files
 *.sqlite3
 
-
+# Ignore specific files
 add_admin.py
-
 test_mongo.py
 
+# Ignore the db/ folder
 db/
