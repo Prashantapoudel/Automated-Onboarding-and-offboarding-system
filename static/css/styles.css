@@ -1,0 +1,11 @@
+body {
+    font-family: Arial, sans-serif;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+}
+.content {
+    margin-left: 260px;
+}

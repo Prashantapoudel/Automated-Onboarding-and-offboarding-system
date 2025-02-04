@@ -9,6 +9,8 @@ admin_app.config.from_object(AdminConfig)
 
 # Initialize MongoDB
 mongo = PyMongo(admin_app)
+db_admin = mongo.db  # This now connects to 'Admin' DB
+
 
 # Initialize Flask-Login
 login_manager = LoginManager()
@@ -16,10 +18,19 @@ login_manager.init_app(admin_app)
 login_manager.login_view = "admin_routes.login"
 
 # Import Routes
-from routes import admin_routes
+from admin_app.routes.admin_routes import admin_bp
+
 
 # Register Blueprints
-admin_app.register_blueprint(admin_routes.admin_bp, url_prefix="/admin")
 
+admin_app.register_blueprint(admin_bp)
+
+
+@admin_app.after_request
+def add_no_cache_headers(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 if __name__ == "__main__":
     admin_app.run(port=5001, debug=True)

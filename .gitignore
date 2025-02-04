@@ -9,3 +9,10 @@ __pycache__/
 
 # Ignore database files
 *.sqlite3
+
+
+add_admin.py
+
+test_mongo.py
+
+db/
