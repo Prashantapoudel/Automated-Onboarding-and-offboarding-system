@@ -2,10 +2,13 @@ from flask import Flask, render_template
 from flask_pymongo import PyMongo
 from flask_login import LoginManager
 from config import AdminConfig
+from admin_app import config
+from flask_mail import Mail
 
 # Initialize Flask App
 admin_app = Flask(__name__)
 admin_app.config.from_object(AdminConfig)
+ 
 
 # Initialize MongoDB
 mongo = PyMongo(admin_app)
@@ -20,8 +23,11 @@ login_manager.login_view = "admin_routes.login"
 # Import Routes
 from admin_app.routes.admin_routes import admin_bp
 
+app = Flask(__name__)
+app.config.from_object(config)
+mail = Mail(app)
 
-# Register Blueprints
+#Register Blueprints
 
 admin_app.register_blueprint(admin_bp)
 
@@ -34,3 +40,6 @@ def add_no_cache_headers(response):
     return response
 if __name__ == "__main__":
     admin_app.run(port=5001, debug=True)
+
+
+

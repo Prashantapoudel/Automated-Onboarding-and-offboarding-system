@@ -22,11 +22,14 @@
         {% endif %}
     {% endwith %}
     <form method="POST">
-        <label>Email:</label>
-        <input type="email" name="email" required>
+        <label>UserId</label>
+        <input type="text" name="user_id" required>
         <label>Password:</label>
         <input type="password" name="password" required>
         <button type="submit">Login</button>
     </form>
+    <a href="{{ url_for('admin_routes.reset_password_request') }}">
+        <button type="button">Reset Password</button>
+    </a>
 </body>
 </html>
