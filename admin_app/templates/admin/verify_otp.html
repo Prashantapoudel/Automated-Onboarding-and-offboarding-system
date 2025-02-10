@@ -1,0 +1,9 @@
+<form method="POST" action="{{ url_for('admin_routes.verify_otp', email=email) }}">
+    <label for="otp">Enter OTP:</label>
+    <input type="text" name="otp" required>
+
+    <!-- Ensure email is included -->
+    <input type="hidden" name="email" value="{{ email }}">
+
+    <button type="submit">Verify OTP</button>
+</form>
