@@ -4,13 +4,16 @@ from flask_login import LoginManager
 from config import MainConfig
 from main_app.models.user_models import UserModel
 from main_app.models.it_models import ITModel
-
-
+from main_app.config import Config
+from flask_mail import Mail
 
 
 # Initialize Flask App
 main_app = Flask(__name__,)
 main_app.config.from_object(MainConfig)
+
+main_app.config.from_object(Config)  # ✅ Load email config
+mail = Mail(main_app) 
 
 # Initialize MongoDB
 mongo = PyMongo(main_app)
@@ -32,13 +35,15 @@ from main_app.routes import user_routes, it_routes
 from main_app.routes.it_routes import it_bp
 from main_app.routes.user_routes import user_bp
 from main_app.routes.login_routes import login_bp  # ✅ Import login blueprint
-from main_app.routes.change_password_routes import change_password_bp  # ✅ Import password change blueprint
+from main_app.routes.change_password_routes import change_password_bp
+from main_app.routes.reset_password_routes import reset_password_bp  
 
 
 main_app.register_blueprint(user_bp)
 main_app.register_blueprint(it_bp)
 main_app.register_blueprint(login_bp)  # ✅ Register login routes
 main_app.register_blueprint(change_password_bp) 
+main_app.register_blueprint(reset_password_bp)
 
 
 @login_manager.unauthorized_handler
@@ -52,6 +57,8 @@ def add_no_cache_headers(response):
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
+
+
 
 
 if __name__ == "__main__":

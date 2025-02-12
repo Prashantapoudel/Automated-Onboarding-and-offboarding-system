@@ -156,8 +156,8 @@ def verify_otp():
     email = request.form.get('email') or request.args.get('email')
     entered_otp = request.form.get('otp')
 
-    print(f"DEBUG: Email received: {email}")
-    print(f"DEBUG: OTP entered: {entered_otp}")
+    # print(f"DEBUG: Email received: {email}")
+    # print(f"DEBUG: OTP entered: {entered_otp}")
 
     if not email:
         flash("Email is missing. Please request a new reset link.", "danger")
@@ -173,7 +173,7 @@ def verify_otp():
 
     stored_otp = user_data.get("otp")
 
-    print(f"DEBUG: Stored OTP in DB: {stored_otp}")
+    # print(f"DEBUG: Stored OTP in DB: {stored_otp}")
 
     if stored_otp and entered_otp and stored_otp == entered_otp:
         print(f"DEBUG: OTP verified successfully for {email}")
@@ -182,7 +182,7 @@ def verify_otp():
         # ✅ Pass email via URL instead of session
         return redirect(url_for('admin_routes.reset_password', email=email))
     else:
-        print("DEBUG: Invalid OTP entered or missing OTP input")
+        # print("DEBUG: Invalid OTP entered or missing OTP input")
         flash("Invalid OTP. Please try again!", "danger")
 
     return render_template('admin/verify_otp.html', email=email)

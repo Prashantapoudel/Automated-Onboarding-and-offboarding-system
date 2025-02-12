@@ -24,6 +24,7 @@
 
         <button type="submit">Login</button>
     </form>
+    <p><a href="{{ url_for('reset_password_bp.request_reset') }}">Forgot Password?</a></p>
 
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
