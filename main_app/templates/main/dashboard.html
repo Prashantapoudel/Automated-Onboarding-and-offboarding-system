@@ -1,7 +1,17 @@
 {% extends "admin/base.html" %}
 
 {% block title %}Dashboard{% endblock %}
-
+<script>
+    // ✅ Prevent Browser from Caching the Page After Logout
+    (function() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onload = function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        };
+    })();
+</script>
 {% block content %}
 <h2>Welcome, {{ user_name }}!</h2>
 <p>This is your dashboard where you can manage onboarding & offboarding processes.</p>

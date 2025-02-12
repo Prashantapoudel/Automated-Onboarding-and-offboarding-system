@@ -12,7 +12,7 @@ admin_app.config.from_object(AdminConfig)
 
 # Initialize MongoDB
 mongo = PyMongo(admin_app)
-db_admin = mongo.db  # This now connects to 'Admin' DB
+db_admin = mongo.db  
 
 
 # Initialize Flask-Login

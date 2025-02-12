@@ -16,3 +16,8 @@ test_mongo.py
 
 # Ignore the db/ folder
 db/
+
+# Ignore the add_IT.py file
+add_IT.py
+# Ignore the db_config.py file
+db_config.py

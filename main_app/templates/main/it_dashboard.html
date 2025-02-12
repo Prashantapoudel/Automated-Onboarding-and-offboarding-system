@@ -1,7 +1,17 @@
 {% extends "main/base.html" %}
 
 {% block title %}IT Dashboard{% endblock %}
-
+<script>
+    // ✅ Prevent Browser from Caching the Page After Logout
+    (function() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onload = function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        };
+    })();
+</script>
 {% block content %}
 <h2>IT Support Dashboard</h2>
 <p>Manage system access, employee support tickets, and tech-related onboarding tasks.</p>
