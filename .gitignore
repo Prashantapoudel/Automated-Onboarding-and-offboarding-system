@@ -21,3 +21,6 @@ db/
 add_IT.py
 # Ignore the db_config.py file
 db_config.py
+
+# Ignore the add_user.py file
+add_user.py

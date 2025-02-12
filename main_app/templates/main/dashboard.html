@@ -1,6 +1,6 @@
-{% extends "admin/base.html" %}
+{% extends "main/base.html" %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}User Dashboard{% endblock %}
 <script>
     // ✅ Prevent Browser from Caching the Page After Logout
     (function() {
@@ -13,6 +13,6 @@
     })();
 </script>
 {% block content %}
-<h2>Welcome, {{ user_name }}!</h2>
+
 <p>This is your dashboard where you can manage onboarding & offboarding processes.</p>
 {% endblock %}
