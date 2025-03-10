@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Messages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .chat-box {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        .message {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+        .sent {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            text-align: right;
+        }
+        .received {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .timestamp {
+            font-size: 0.75em;
+            color: #777;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-input {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input textarea {
+            flex: 1;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .chat-input button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    {% if current_user.is_authenticated %}
+        {% if current_user.role == 'IT' %}
+            <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
+                Go to IT Dashboard
+            </a>
+        {% else %}
+            <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
+                Go to User Dashboard
+            </a>
+        {% endif %}
+    {% endif %}
+    </a>
+    <h2>Messages</h2>
+
+    <!-- ✅ Select Chat Recipient -->
+    <form method="GET">
+        <label>Choose a Chat:</label>
+        <select name="recipient_id" onchange="this.form.submit()">
+            <option value="" disabled {{ 'selected' if not selected_recipient else '' }}>Select a user...</option>
+            {% for user in users %}
+                <option value="{{ user['user_id'] }}" {{ 'selected' if user['user_id'] == selected_recipient else '' }}>
+                    {{ user['display_name'] }} ({{ user['role'] }})
+                </option>
+            {% endfor %}
+        </select>
+        
+    </form>
+
+    <!-- ✅ Display Messages for Selected Recipient -->
+    <div class="chat-box">
+        {% if selected_recipient %}
+            {% for message in messages %}
+                <div class="message-container">
+                    {% if message.sender_id == current_user.user_id %}
+                        <div class="message sent">
+                            <strong>You</strong>: {{ message.message_text }}
+                            <div class="timestamp">{{ message.timestamp }}</div>
+                        </div>
+                    {% else %}
+                        <div class="message received">
+                            <strong>{{ message.sender_name }}</strong>: {{ message.message_text }}
+                            <div class="timestamp">{{ message.timestamp }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p><em>Select a recipient to view messages.</em></p>
+        {% endif %}
+    </div>
+
+
+    <!-- ✅ Send Message Form -->
+    {% if selected_recipient %}
+        <form method="POST" class="chat-input">
+            <input type="hidden" name="recipient_id" value="{{ selected_recipient }}">
+            <textarea name="message_text" placeholder="Type your message here..."></textarea>
+            <button type="submit">Send</button>
+        </form>
+    {% endif %}
+</body>
+
+
+</html>

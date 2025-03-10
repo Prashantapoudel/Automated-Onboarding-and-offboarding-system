@@ -39,13 +39,7 @@ from main_app.routes.change_password_routes import change_password_bp
 from main_app.routes.reset_password_routes import reset_password_bp  
 from main_app.routes.profiles_route import profile_bp  # ✅ Import Unified Profile Routes
 from main_app.routes.it_create_user import it_create_user_bp  # ✅ Import IT Create User Route
-  # ✅ Register Unified Profile Routes
-
-  # ✅ Register User Profile Routes
-
-  # ✅ Import IT Create User Route
-
- # ✅ Register IT Create User Route
+from main_app.routes.messaging_routes import messaging_bp  # ✅ Import messaging blueprint
 
 main_app.register_blueprint(user_bp)
 main_app.register_blueprint(it_bp)
@@ -54,6 +48,7 @@ main_app.register_blueprint(change_password_bp)
 main_app.register_blueprint(reset_password_bp)
 main_app.register_blueprint(profile_bp)
 main_app.register_blueprint(it_create_user_bp) 
+main_app.register_blueprint(messaging_bp)  # ✅ Register messaging routes
 @login_manager.unauthorized_handler
 def unauthorized():
     """Redirect unauthorized users to the login page"""

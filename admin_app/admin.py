@@ -22,6 +22,7 @@ login_manager.login_view = "admin_routes.login"
 
 # Import Routes
 from admin_app.routes.admin_routes import admin_bp
+from admin_app.routes.admin_messaging import admin_messaging_bp
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -30,6 +31,7 @@ mail = Mail(app)
 #Register Blueprints
 
 admin_app.register_blueprint(admin_bp)
+admin_app.register_blueprint(admin_messaging_bp)
 
 
 @admin_app.after_request
