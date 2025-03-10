@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Create User</title>
+</head>
+<body>
+    <h2>Create New User</h2>
+
+    <form method="POST">
+        <label>Email:</label>
+        <input type="email" name="email" required placeholder="Enter user email"><br>
+
+        <label>First Name:</label>
+        <input type="text" name="first_name" required placeholder="Enter first name"><br>
+
+        <label>Last Name:</label>
+        <input type="text" name="last_name" required placeholder="Enter last name"><br>
+
+        <h3>Assign Equipment</h3>
+        <label><input type="checkbox" name="equipment" value="Laptop"> Laptop</label><br>
+        <label><input type="checkbox" name="equipment" value="Monitor"> Monitor</label><br>
+        <label><input type="checkbox" name="equipment" value="Keyboard"> Keyboard</label><br>
+        <label><input type="checkbox" name="equipment" value="Mouse"> Mouse</label><br>
+        <label><input type="checkbox" name="equipment" value="Headset"> Headset</label><br>
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <a href="{{ url_for('it_bp.it_dashboard') }}">Cancel</a>
+</body>
+</html>

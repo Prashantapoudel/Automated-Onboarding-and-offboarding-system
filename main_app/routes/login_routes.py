@@ -19,35 +19,36 @@ def login():
         # ✅ Print all users in MAIN collection for debugging
         print(f"🛠 DEBUG: Fetching all users in MAIN collection...")
         all_users = list(main_collection.find({}, {"user_id": 1}))
-        print(f"📌 DEBUG: Users in MAIN collection: {all_users}")
+        # print(f"📌 DEBUG: Users in MAIN collection: {all_users}")
 
         # ✅ Check MAIN Collection First
         user_data = main_collection.find_one({"user_id": user_id})
-        print(f"🔍 DEBUG: Query result from MAIN collection: {user_data}")  # Print the result
+        # print(f"🔍 DEBUG: Query result from MAIN collection: {user_data}")  # Print the result
 
         user_model = None  # To store the user model
 
         if user_data:
-            print(f"✅ DEBUG: Found user in MAIN collection: {user_data}")
+            # print(f"✅ DEBUG: Found user in MAIN collection: {user_data}")
             user_model = UserModel
         else:
-            print(f"❌ DEBUG: User not found in MAIN. Checking IT collection...")
+            # print(f"❌ DEBUG: User not found in MAIN. Checking IT collection...")
             user_data = it_collection.find_one({"user_id": user_id})
-            print(f"🔍 DEBUG: Query result from IT collection: {user_data}")
-
+            # print(f"🔍 DEBUG: Query result from IT collection: {user_data}")
             if user_data:
-                print(f"✅ DEBUG: Found user in IT collection: {user_data}")
                 user_model = ITModel
-            else:
-                print(f"❌ DEBUG: User not found in IT collection either!")
+            # if user_data:
+            #     # print(f"✅ DEBUG: Found user in IT collection: {user_data}")
+            #     user_model = ITModel
+            # else:
+            #     print(f"❌ DEBUG: User not found in IT collection either!")
 
         if user_data:
             stored_password = user_data.get("password", "")
-            print(f"🔍 DEBUG: Stored password hash: {stored_password}")
+            # print(f"🔍 DEBUG: Stored password hash: {stored_password}")
 
             # ✅ Check if password is correct
             if check_password_hash(stored_password, password):
-                print(f"✅ DEBUG: Password match successful!")
+                # print(f"✅ DEBUG: Password match successful!")
 
                 user = user_model(
                     user_id=user_data["user_id"],  
@@ -69,7 +70,7 @@ def login():
                 else:
                     return redirect(url_for('login_bp.login'))  # Default fallback
             else:
-                print(f"❌ DEBUG: Password does NOT match!")
+                # print(f"❌ DEBUG: Password does NOT match!")
                 flash("Invalid User ID or Password", "danger")
         else:
             flash("Invalid User ID or Password", "danger")

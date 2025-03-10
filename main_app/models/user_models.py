@@ -3,7 +3,8 @@ from main_app.db_config import main_collection
 
 class UserModel(UserMixin):
     def __init__(self, user_id, email, role):
-        self.id = user_id  # ✅ User ID stored in `id`
+        self.id = user_id  # ✅ Required by Flask-Login
+        self.user_id = user_id  # ✅ Needed for profile routes
         self.email = email
         self.role = role
 

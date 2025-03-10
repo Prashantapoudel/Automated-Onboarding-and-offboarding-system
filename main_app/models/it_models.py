@@ -3,7 +3,8 @@ from main_app.db_config import it_collection
 
 class ITModel(UserMixin):
     def __init__(self, user_id, email, role):
-        self.id = user_id  # ✅ IT User ID stored in `id`
+        self.id = user_id 
+        self.user_id = user_id 
         self.email = email
         self.role = role
 

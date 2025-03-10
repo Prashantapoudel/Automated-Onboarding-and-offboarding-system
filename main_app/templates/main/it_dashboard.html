@@ -1,4 +1,22 @@
-{% extends "main/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand px-3" href="#">HireSync</a>
+        <ul class="nav justify-content-end">
+            <li class="nav-item"><a class="nav-link text-white" href="/logout">Logout</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('it_bp.it_dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('profile_bp.view_profile') }}">View profile </ul>
+    </nav>
+
 
 {% block title %}IT Dashboard{% endblock %}
 <script>
@@ -12,7 +30,7 @@
         };
     })();
 </script>
-{% block content %}
-<h2>IT Support Dashboard</h2>
-<p>Manage system access, employee support tickets, and tech-related onboarding tasks.</p>
-{% endblock %}
+<a href="{{ url_for('it_create_user_bp.create_user') }}">
+    <button>Create User</button>
+</a>
+

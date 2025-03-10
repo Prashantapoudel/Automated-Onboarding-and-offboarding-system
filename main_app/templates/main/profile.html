@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ role }} Profile</title>
+</head>
+<body>
+    <h2>{{ role }} Profile</h2>
+    <p><strong>User ID:</strong> {{ user['user_id'] }}</p>
+    <p><strong>Email:</strong> {{ user['email'] }}</p>
+
+    {% if user.get('profile') %}
+        <!-- ✅ Show Profile Details if Profile Exists -->
+        <h3>Addresses</h3>
+        <p><strong>Home Address:</strong> {{ user['profile'].get('addresses', {}).get('home', 'Not Available') }}</p>
+        <p><strong>Mailing Address:</strong> {{ user['profile'].get('addresses', {}).get('mailing', 'Not Available') }}</p>
+
+        <h3>Contact Details</h3>
+        <p><strong>Phone:</strong> {{ user['profile'].get('contact_details', {}).get('phone', 'Not Available') }}</p>
+        <p><strong>Email:</strong> {{ user['profile'].get('contact_details', {}).get('email', 'Not Available') }}</p>
+
+        <h3>Name</h3>
+        <p><strong>First Name:</strong> {{ user['profile'].get('name', {}).get('first_name', 'Not Available') }}</p>
+        <p><strong>Last Name:</strong> {{ user['profile'].get('name', {}).get('last_name', 'Not Available') }}</p>
+
+        <h3>Emergency Contacts</h3>
+        <p><strong>Contact Name:</strong> {{ user['profile'].get('emergency_contacts', {}).get('contact_name', 'Not Available') }}</p>
+        <p><strong>Contact Phone:</strong> {{ user['profile'].get('emergency_contacts', {}).get('contact_phone', 'Not Available') }}</p>
+
+        <h3>Additional Information</h3>
+        <p>{{ user['profile'].get('additional_information', 'Not Available') }}</p>
+
+        <h3>Assigned Equipment</h3>
+        {% if user['profile'].get('equipment_assigned') %}
+            <ul>
+                {% for item in user['profile']['equipment_assigned'] %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No equipment assigned.</p>
+        {% endif %}
+        <a href="{{ url_for('profile_bp.edit_profile') }}">
+            <button>Edit Profile</button>
+        </a>
+        
+            {% if role == "User" %}
+                <a href="{{ url_for('user_bp.dashboard') }}">
+                    <button>Go to Dashboard</button>
+                </a>
+            {% elif role == "IT" %}
+                <a href="{{ url_for('it_bp.it_dashboard') }}">
+                    <button>Go to Dashboard</button>
+                </a>
+            {% endif %}
+
+            
+     
+    {% else %}
+        <!-- ✅ Show Create Profile Option if Profile Doesn't Exist -->
+        <p><em>No profile information available.</em></p>
+        <a href="{{ url_for('profile_bp.create_profile') }}">
+            <button>Create Profile</button>
+
+        </a>
+        
+        
+        {% endif %}
+
+        
+</body>
+</html>
