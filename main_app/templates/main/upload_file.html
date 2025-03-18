@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upload File</title>
+</head>
+<body>
+    <h1>Upload File</h1>
+
+    <!-- ✅ File Upload Form -->
+    <form method="POST" enctype="multipart/form-data">
+        <!-- ✅ Select User -->
+        <label for="user_id">Select User:</label>
+        <select name="user_id" required>
+            <option value="" disabled selected>Choose a user...</option>
+            {% for user in users %}
+                <option value="{{ user['user_id'] }}">{{ user['display_name'] }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <!-- ✅ Select File Type -->
+        <label for="file_type">File Type:</label>
+        <select name="file_type" required>
+            <option value="Resume">Resume</option>
+            <option value="Contract">Contract</option>
+            <option value="Certificate">Certificate</option>
+        </select>
+        <br>
+
+        <!-- ✅ Upload File -->
+        <label for="file">Select File:</label>
+        <input type="file" name="file" required>
+        <br>
+
+        <!-- ✅ Submit Button -->
+        <button type="submit">Upload File</button>
+    </form>
+
+    <!-- ✅ Back to Dashboard -->
+    <a href="{{ url_for('it_bp.it_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

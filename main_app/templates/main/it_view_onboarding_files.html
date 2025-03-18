@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <h2>View User Onboarding Files</h2>
+
+    <form method="GET">
+        <label>Select User:</label>
+        <select name="user_id" onchange="this.form.submit()">
+            <option value="" disabled selected>Choose a user...</option>
+            {% for user in users %}
+                <option value="{{ user.user_id }}" {% if selected_user_id == user.user_id %}selected{% endif %}>
+                    {{ user.display_name }} ({{ user.user_id }})
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if selected_user_id %}
+        <h3>Onboarding Files for {{ users | selectattr('user_id', 'equalto', selected_user_id) | map(attribute='display_name') | first }}</h3>
+
+        {% if files %}
+            <div class="file-container">
+                {% for file in files %}
+                    <div class="file-item">
+                        <h4>{{ file.file_type }}:</h4>
+
+                        {% if file.s3_url and file.file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                            <!-- ✅ Show Image Preview -->
+                            <img src="{{ file.s3_url }}" alt="{{ file.file_name }}" class="file-preview">
+                        {% else %}
+                            <!-- ❌ Show Download Button for Non-Images -->
+                            <a href="{{ file.s3_url }}" target="_blank">
+                                <button>Download {{ file.file_name }}</button>
+                            </a>
+                        {% endif %}
+
+                        <p>Uploaded: {{ file.uploaded_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No onboarding files uploaded by this user.</p>
+        {% endif %}
+    {% else %}
+        <p>Select a user to view their onboarding files.</p>
+    {% endif %}
+
+    <a href="{{ url_for('it_bp.it_dashboard') }}">Back to IT Dashboard</a>
+
+    <style>
+        .file-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .file-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            width: 250px;
+            text-align: center;
+        }
+        .file-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+    </style>
+
+</body>
+</html>

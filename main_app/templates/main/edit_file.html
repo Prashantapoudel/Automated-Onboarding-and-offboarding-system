@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit File</title>
+</head>
+<body>
+
+    <h2>Edit File</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label>File Type:</label>
+        <input type="text" name="file_type" value="{{ file.file_type }}" required>
+        
+        <label>File Name:</label>
+        <input type="text" name="file_name" value="{{ file.file_name }}" required>
+
+        <label>Replace File (Optional):</label>
+        <input type="file" name="file">
+
+        <button type="submit">Update File</button>
+    </form>
+
+    <h3>Current File:</h3>
+    {% if file.s3_url and file.file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+        <img src="{{ file.s3_url }}" alt="{{ file.file_name }}" width="200">
+    {% else %}
+        <a href="{{ file.s3_url }}" target="_blank">Download Current File</a>
+    {% endif %}
+
+    <br><br>
+    <a href="{{ url_for('file_upload_bp.manage_offboarding_files') }}">Back to Manage Files</a>
+
+</body>
+</html>

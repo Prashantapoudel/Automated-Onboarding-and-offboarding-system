@@ -9,6 +9,11 @@ user_bp = Blueprint('user_bp', __name__)
 def dashboard():
     return render_template('main/dashboard.html')
 
+@user_bp.route("/check-session")
+def check_session():
+    session["test"] = "Session Works!"
+    return f"Session Data: {session.get('test')}"
+
 @user_bp.route('/logout')
 @login_required
 def logout():

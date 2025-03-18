@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<h2>Upload Offboarding File</h2>
+{% if current_user.is_authenticated %}
+{% if current_user.role == 'IT' %}
+    <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
+        Go to IT Dashboard
+    </a>
+{% else %}
+    <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
+        Go to User Dashboard
+    </a>
+{% endif %}
+{% endif %}
+<form method="POST" enctype="multipart/form-data">
+    <label for="user_id">Select User:</label>
+    <select name="user_id" required>
+        {% for user in users %}
+            <option value="{{ user.user_id }}">{{ user.display_name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="file_type">File Type:</label>
+    <select name="file_type" required>
+        <option value="Resume">Resume</option>
+        <option value="Contract">Contract</option>
+    </select>
+
+    <label for="file">Select File:</label>
+    <input type="file" name="file" required>
+
+    <button type="submit">Upload File</button>
+</form>

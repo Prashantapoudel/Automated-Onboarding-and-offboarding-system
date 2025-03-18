@@ -65,6 +65,12 @@ def login():
 
     return render_template('admin/login.html') 
 
+
+@admin_bp.route("/check-session")
+def check_session():
+    session["test"] = "Session Works!"
+    return f"Session Data: {session.get('test')}"
+
 # Logout Route
 @admin_bp.route('/logout')
 @login_required
@@ -187,60 +193,6 @@ def verify_otp():
 
     return render_template('admin/verify_otp.html', email=email)
 
-# @admin_bp.route('/reset-password', methods=['GET', 'POST'])
-# def reset_password_request():
-#     if request.method == 'POST':
-#         email = request.form['email']
-#         admin_data = db.Admin.find_one({"email": email})
-
-#         if admin_data:
-#             serializer = URLSafeTimedSerializer(os.getenv("SECRET_KEY"))
-#             token = serializer.dumps(email, salt='email-confirm')
-
-#             verification_link = url_for('admin_routes.verify_email', token=token, _external=True)
-            
-#             msg = Message("Reset Your Password", sender=(os.getenv("EMAIL_USER")), recipients=[email])
-#             msg.body = f"Click the link below to verify your email and reset your password:\n{verification_link}"
-#             # mail.send(msg)
-#             #THIS IS CUSTOM FROM HERE TO 
-#             msg = MIMEMultipart()
-#             msg["From"] = (os.getenv("EMAIL_USER"))
-#             msg["To"] = email
-#             msg["Subject"] = "Reset Your Password"
-#             msg.attach(MIMEText( f"Click the link below to verify your email and reset your password:\n{verification_link}"))
-#             server = smtplib.SMTP("smtp.gmail.com", 587)
-#             server.ehlo()
-#             server.starttls()  # Secure connection
-#             server.ehlo()
-#             server.login((os.getenv("EMAIL_USER")), (os.getenv("EMAIL_PASS")))  # Authenticate
-#             server.sendmail((os.getenv("EMAIL_USER")), email, msg.as_string())  # Send email
-#             server.quit()
-
-#             #TO HERE
-#             flash("A password reset link has been sent to your email.", "info")
-#             return redirect(url_for('admin_routes.login'))
-#         else:
-#             flash("Email not found. Please enter a registered email.", "danger")
-
-#     return render_template('admin/reset_password_request.html')
-# @admin_bp.route('/verify-email/<token>', methods=['GET'])
-# def verify_email(token):
-#     try:
-#         serializer = URLSafeTimedSerializer(os.getenv("SECRET_KEY"))
-#         email = serializer.loads(token, salt="password-reset", max_age=3600)  # Token expires in 1 hour
-
-#         # Find the user with this email
-#         user = db.Admin.find_one({"email": email})
-#         if not user:
-#             flash("Invalid or expired token!", "danger")
-#             return redirect(url_for('admin_routes.login'))
-
-#         # ✅ Redirect to a password reset page with email verified
-#         return redirect(url_for('admin_routes.reset_password', token=token))
-
-#     except Exception as e:
-#         flash("The reset link is invalid or has expired!", "danger")
-#         return redirect(url_for('admin_routes.login'))
 
 @admin_bp.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():

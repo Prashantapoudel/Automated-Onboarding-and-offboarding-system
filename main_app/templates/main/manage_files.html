@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+{% if current_user.is_authenticated %}
+        {% if current_user.role == 'IT' %}
+            <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
+                Go to IT Dashboard
+            </a>
+        {% else %}
+            <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
+                Go to User Dashboard
+            </a>
+        {% endif %}
+    {% endif %}
+    
+<form method="GET">
+    <label>Select User:</label>
+    <select name="user_id" onchange="this.form.submit()">
+        <option value="" disabled selected>Choose a user...</option>
+        {% for user in users %}
+            <option value="{{ user.user_id }}" {% if selected_user_id == user.user_id %}selected{% endif %}>
+                {{ user.display_name }} ({{ user.user_id }})
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+{% if selected_user_id %}
+    <h3>Files for {{ selected_user_id }}</h3>
+
+    {% if files %}
+        {% for file in files %}
+        <div class="file-item">
+            <h4>{{ file.file_type }}:</h4>
+            {% if file.s3_url and file.file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                <img src="{{ file.s3_url }}" class="file-preview">
+            {% else %}
+                <a href="{{ file.s3_url }}" target="_blank">
+                    <button>Download {{ file.file_name }}</button>
+                </a>
+            {% endif %}
+
+            <form action="{{ url_for('file_upload_bp.delete_file', file_id=file._id) }}" method="POST">
+                <button type="submit">Delete</button>
+            </form>
+
+            <a href="{{ url_for('file_upload_bp.edit_file', file_id=file._id) }}">
+                <button>Edit</button>
+            </a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No files uploaded for this user.</p>
+    {% endif %}
+{% endif %}

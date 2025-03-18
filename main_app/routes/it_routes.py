@@ -8,6 +8,10 @@ it_bp = Blueprint('it_bp', __name__)
 @login_required
 def it_dashboard():
     return render_template('main/it_dashboard.html')
+@it_bp.route("/check-session")
+def check_session():
+    session["test"] = "Session Works!"
+    return f"Session Data: {session.get('test')}"
 
 @it_bp.route('/logout')
 @login_required

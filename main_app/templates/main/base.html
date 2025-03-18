@@ -23,6 +23,17 @@
                 <li class="nav-item"><a class="nav-link" href="/dashboard">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="/messages">messages</a></li>
+                {% if current_user.role not in ['IT', 'Admin'] %}
+                <li><a href="{{ url_for('file_upload_bp.view_offboarding_files') }}">My Offboarding Files</a></li>
+                <li><a href="{{ url_for('file_upload_bp.view_onboarding_files') }}">My Onboarding Files</a></li>
+                <li><a href="{{ url_for('file_upload_bp.upload_onboarding_file') }}">Upload Onboarding Documents</a></li>
+
+                {% endif %}
+
+                {% if current_user.role == 'IT' %}
+
+{% endif %}
+
             </ul>
         </div>
 

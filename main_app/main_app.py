@@ -6,7 +6,11 @@ from main_app.models.user_models import UserModel
 from main_app.models.it_models import ITModel
 from main_app.config import Config
 from flask_mail import Mail
+import redis
+from flask import Flask, session
+from flask_session import Session
 
+app = Flask(__name__)
 
 # Initialize Flask App
 main_app = Flask(__name__,)
@@ -22,6 +26,8 @@ db_main = mongo.db  # This now connects to 'Main' DB
 
 # Initialize Flask-Login
 login_manager = LoginManager()
+login_manager.session_protection = "strong"
+login_manager.init_app(app)
 login_manager.init_app(main_app)
 login_manager.login_view = "user_routes.login"
 @login_manager.user_loader
@@ -40,6 +46,7 @@ from main_app.routes.reset_password_routes import reset_password_bp
 from main_app.routes.profiles_route import profile_bp  # ✅ Import Unified Profile Routes
 from main_app.routes.it_create_user import it_create_user_bp  # ✅ Import IT Create User Route
 from main_app.routes.messaging_routes import messaging_bp  # ✅ Import messaging blueprint
+from main_app.routes.file_upload import file_upload_bp  # ✅ Import file upload blueprint
 
 main_app.register_blueprint(user_bp)
 main_app.register_blueprint(it_bp)
@@ -48,7 +55,8 @@ main_app.register_blueprint(change_password_bp)
 main_app.register_blueprint(reset_password_bp)
 main_app.register_blueprint(profile_bp)
 main_app.register_blueprint(it_create_user_bp) 
-main_app.register_blueprint(messaging_bp)  # ✅ Register messaging routes
+main_app.register_blueprint(messaging_bp)
+main_app.register_blueprint(file_upload_bp)
 @login_manager.unauthorized_handler
 def unauthorized():
     """Redirect unauthorized users to the login page"""
@@ -62,7 +70,14 @@ def add_no_cache_headers(response):
     return response
 
 
+app.config["SESSION_TYPE"] = "redis"
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_USE_SIGNER"] = True  # Optional for security
+app.config["SESSION_KEY_PREFIX"] = "hiresync_"  # Namespace
+app.config["SESSION_REDIS"] = redis.Redis(host="localhost", port=6379)
 
+# ✅ Initialize the Session
+Session(app)
 
 if __name__ == "__main__":
      main_app.run(port=5000, debug=True)  
