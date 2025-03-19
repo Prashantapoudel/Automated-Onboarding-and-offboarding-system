@@ -24,3 +24,6 @@ db_config.py
 
 # Ignore the add_user.py file
 add_user.py
+
+#Ignore the aws_test.py file
+aws_test.py

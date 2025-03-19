@@ -27,7 +27,7 @@
                 <li><a href="{{ url_for('file_upload_bp.view_offboarding_files') }}">My Offboarding Files</a></li>
                 <li><a href="{{ url_for('file_upload_bp.view_onboarding_files') }}">My Onboarding Files</a></li>
                 <li><a href="{{ url_for('file_upload_bp.upload_onboarding_file') }}">Upload Onboarding Documents</a></li>
-
+                <li><a href="{{ url_for('exit_interview_bp.user_exit_interview') }}">View Exit Interview</a></li>
                 {% endif %}
 
                 {% if current_user.role == 'IT' %}

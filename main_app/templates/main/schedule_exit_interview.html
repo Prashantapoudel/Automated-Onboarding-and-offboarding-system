@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Exit Interview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        .form-container {
+            background:rgb(255, 255, 255);
+            padding: 20px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select, input[type="datetime-local"], button {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        select {
+            width: 250px;
+            margin-right: 10px;
+        }
+
+        input[type="datetime-local"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .dashboard-link {
+            display: block;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>Your Offboarding Files</h2>
+<a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-link">Go to IT Dashboard</a>
+
+<h2>Schedule Exit Interview</h2>
+<div class="form-container">
+    <form method="POST">
+        <label for="user_id">Select User:</label>
+        <select name="user_id" required>
+            <option value="" disabled selected>Choose a user...</option>
+            {% for user in users %}
+                <option value="{{ user.user_id }}">{{ user.display_name }} ({{ user.user_id }})</option>
+            {% endfor %}
+        </select>
+        
+
+        <label for="schedule_date">Schedule Date & Time:</label>
+        <input type="datetime-local" name="schedule_date" id="schedule_date" required>
+
+        <button type="submit">Schedule</button>
+    </form>
+</div>
+
+</body>
+</html>

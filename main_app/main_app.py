@@ -47,6 +47,7 @@ from main_app.routes.profiles_route import profile_bp  # ✅ Import Unified Prof
 from main_app.routes.it_create_user import it_create_user_bp  # ✅ Import IT Create User Route
 from main_app.routes.messaging_routes import messaging_bp  # ✅ Import messaging blueprint
 from main_app.routes.file_upload import file_upload_bp  # ✅ Import file upload blueprint
+from main_app.routes.exit_interview import exit_interview_bp  # ✅ Import Exit Interview Blueprint
 
 main_app.register_blueprint(user_bp)
 main_app.register_blueprint(it_bp)
@@ -57,6 +58,8 @@ main_app.register_blueprint(profile_bp)
 main_app.register_blueprint(it_create_user_bp) 
 main_app.register_blueprint(messaging_bp)
 main_app.register_blueprint(file_upload_bp)
+main_app.register_blueprint(exit_interview_bp)
+
 @login_manager.unauthorized_handler
 def unauthorized():
     """Redirect unauthorized users to the login page"""

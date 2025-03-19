@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exit Interview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .dashboard-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            text-decoration: none;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .dashboard-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>My Exit Interview</h2>
+
+    {% if interview %}
+        <table>
+            <tr>
+                <th>Scheduled Date</th>
+                <td>{{ interview.scheduled_date }}</td>
+            </tr>
+            {% if interview.user_requested_change %}
+            <tr>
+                <th>Requested Change</th>
+                <td>{{ interview.user_requested_change.new_date }} 
+                    (Status: <strong>{{ interview.user_requested_change.status }}</strong>)</td>
+            </tr>
+            {% endif %}
+        </table>
+
+        <h3>Request Reschedule</h3>
+        <form method="POST" action="{{ url_for('exit_interview_bp.request_reschedule') }}">
+            <label for="new_date">New Date & Time:</label>
+            <input type="datetime-local" name="new_date" required>
+            <button type="submit" class="btn">Request Change</button>
+        </form>
+    
+    {% else %}
+        <div class="info-box">
+            <p>No exit interview scheduled for you at the moment.</p>
+        </div>
+    {% endif %}
+
+    {% if current_user.role == 'IT' %}
+        <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-btn">Go to IT Dashboard</a>
+    {% else %}
+        <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-btn">Go to User Dashboard</a>
+    {% endif %}
+</div>
+
+</body>
+</html>
