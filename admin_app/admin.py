@@ -30,6 +30,10 @@ login_manager.login_view = "admin_routes.login"
 from admin_app.routes.admin_routes import admin_bp
 # from admin_app.routes.admin_messaging import admin_messaging_bp
 from admin_app.routes.admin_messaging import messaging_bp
+from admin_app.routes.profiles import profile_bp
+from admin_app.routes.file_management import file_bp
+from admin_app.routes.admin_create_it import admin_create_it_bp
+from admin_app.routes.it_payroll import admin_payroll_bp
 
 
 app.config.from_object(config)
@@ -38,8 +42,14 @@ mail = Mail(app)
 #Register Blueprints
 
 admin_app.register_blueprint(admin_bp)
-# admin_app.register_blueprint(admin_messaging_bp)
 admin_app.register_blueprint(messaging_bp)
+admin_app.register_blueprint(profile_bp)  
+admin_app.register_blueprint(file_bp)
+admin_app.register_blueprint(admin_create_it_bp)
+admin_app.register_blueprint(admin_payroll_bp)
+
+
+
 
 
 @admin_app.after_request

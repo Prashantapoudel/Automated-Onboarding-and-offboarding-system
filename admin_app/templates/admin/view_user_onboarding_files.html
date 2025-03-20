@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage User Onboarding Files</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 1000px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-button {
+            margin-bottom: 15px;
+        }
+        .dashboard-button button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .dashboard-button button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📂 Manage User Onboarding Files</h2>
+
+    <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="dashboard-button">
+        <button>🏠 Go to Dashboard</button>
+    </a>
+
+    <form method="GET" class="mt-3">
+        <label for="user_id">Select User:</label>
+        <select name="user_id" class="form-select" onchange="this.form.submit()">
+            <option value="">Choose a user...</option>
+            {% for user in users %}
+                <option value="{{ user.user_id }}">{{ user.display_name }} ({{ user.user_id }})</option>
+            {% endfor %}
+        </select>
+        
+    </form>
+
+    {% if selected_user_id %}
+        <h4 class="mt-4">Files for {{ get_display_name(selected_user_id) }}</h4>
+
+        {% if files %}
+            <table class="table table-hover mt-4">
+                <thead class="table-dark">
+                    <tr>
+                        <th>File Name</th>
+                        <th>File Type</th>
+                        <th>Uploaded At</th>
+                        <th>View</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>{{ file.file_name }}</td>
+                        <td>{{ file.file_type }}</td>
+                        <td>
+                            {% if file.uploaded_at %}
+                                {{ file.uploaded_at.strftime('%B %d, %Y - %I:%M %p') }}
+                            {% else %}
+                                <span class="text-muted">Unknown</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ file.s3_url }}" target="_blank" class="btn btn-primary btn-sm">📄 View</a>
+                        </td>
+                        <td>
+                            <!-- Edit Button -->
+                            <a href="{{ url_for('file_bp.edit_onboarding_file', file_id=file._id) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                            
+                            <!-- Delete Button -->
+                            <form action="{{ url_for('file_bp.delete_onboarding_file', file_id=file._id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-warning mt-3" role="alert">
+                No onboarding files found for this user.
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+</body>
+</html>

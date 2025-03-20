@@ -12,6 +12,8 @@ import smtplib
 from admin_app import app, mail 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+
 # from admin_app.admin import app, mail
 
 load_dotenv()

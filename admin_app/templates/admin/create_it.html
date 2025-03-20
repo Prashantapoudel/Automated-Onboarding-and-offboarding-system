@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create IT User</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>🖥️ Create IT User</h2>
+    <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="btn btn-primary">🏠 Go to Dashboard</a>
+
+
+    <form method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">IT Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="equipment" class="form-label">Assign Equipment (Optional)</label>
+            <select class="form-select" name="equipment" multiple>
+                <option value="Laptop">💻 Laptop</option>
+                <option value="Monitor">🖥️ Monitor</option>
+                <option value="Mouse">🖱️ Mouse</option>
+                <option value="Keyboard">⌨️ Keyboard</option>
+                <option value="Headset">🎧 Headset</option>
+                <option value="Phone">📞 Phone</option>
+            </select>
+            <small class="text-muted">Hold CTRL (Windows) / CMD (Mac) to select multiple items.</small>
+        </div>
+
+        <button type="submit" class="btn btn-success">✅ Create IT User</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<h2>My Payroll</h2>
+
+{% if payroll %}
+    <p><strong>Hours Worked:</strong> {{ payroll.hours_worked }}</p>
+    <p><strong>Hourly Rate:</strong> ${{ payroll.hourly_rate }}</p>
+    <p><strong>Total Pay:</strong> <strong>${{ payroll.total_pay }}</strong></p>
+    <p><strong>Pay Date:</strong> {{ payroll.pay_date }}</p>
+{% else %}
+    <p>No payroll record found.</p>
+{% endif %}
+
+<a href="{{ url_for('user_bp.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>

@@ -25,6 +25,26 @@
                 <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
                 <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="/messages">messages</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('profile_bp.list_profiles') }}">
+                        👤 Manage Employee & IT Profiles
+                    </a>
+                </li>
+                <li><a href="{{ url_for('file_bp.view_offboarding_files') }}">📂 Manage Offboarding Files</a></li>
+                <li><a href="{{ url_for('file_bp.admin_view_user_onboarding_files') }}">📁 View User Onboarding Files</a></li>
+                <li><a href="{{ url_for('admin_create_it_bp.create_it') }}">➕ Create IT User</a></li>
+                <li><a href="{{ url_for('admin_payroll_bp.manage_it_payroll') }}">📊 Manage IT Payroll</a></li>
+                <li><a href="{{ url_for('admin_payroll_bp.create_it_payroll') }}">📝 Create IT Payroll</a></li>
+                <li><a href="{{ url_for('admin_payroll_bp.manage_user_payroll') }}">📊 Manage User Payroll</a></li>
+
+
+
+
+
+                               
+
+                
+                
             </ul>
         </div>
 

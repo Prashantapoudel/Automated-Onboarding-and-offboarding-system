@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+{% block content %}
+
+<h2>Profile Details</h2>
+<a href="{{ url_for('admin_routes.admin_dashboard') }}" class="dashboard-button">
+    <button>Dashboard</button>
+</a>
+<p><strong>Name:</strong> {{ user.profile.name.first_name }} {{ user.profile.name.last_name }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+<p><strong>Role:</strong> {% if user.role == "IT" %} IT Admin {% else %} Employee {% endif %}</p>
+
+<a href="{{ url_for('profile_bp.edit_profile', user_id=user.user_id) }}">Edit Profile</a>
+<form method="POST" action="{{ url_for('profile_bp.delete_profile', user_id=user.user_id) }}">
+    <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+</form>
+
+<a href="{{ url_for('profile_bp.list_profiles') }}">Back to Profiles</a>
+{% endblock %}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage IT Payroll</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>📊 Manage IT Payroll</h2>
+    <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="btn btn-primary mb-3">🏠 Go to Dashboard</a>
+
+    {% if payroll_data %}
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>IT Staff</th>
+                <th>Hours Worked</th>
+                <th>Hourly Rate</th>
+                <th>Total Payment</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in payroll_data %}
+            <tr>
+                <td>{{ record.it_id }}</td>
+                <td>{{ record.hours_worked }}</td>
+                <td>${{ record.hourly_rate }}</td>
+                <td>${{ record.total_payment }}</td>
+                <td>
+                    <a href="{{ url_for('admin_payroll_bp.update_it_payroll', payroll_id=record._id) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning">No payroll data available.</div>
+    {% endif %}
+</div>
+
+</body>
+</html>
