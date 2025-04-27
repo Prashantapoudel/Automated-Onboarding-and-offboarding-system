@@ -1,71 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ role }} Profile</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            padding-top: 50px;
+        }
+
+        /* Fixed Navbar */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-item a, .edit-profile a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            background-color: #d65f1a;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 30px;
+        }
+
+        .nav-item a:hover, .edit-profile a:hover {
+            background-color: #e46b20;
+        }
+
+        .logout-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #df0218;
+        }
+
+        /* Profile Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Profile Section Styling */
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            
+        }
+
+        .profile-section h3 {
+            border-bottom: 2px solid #f67b2f;
+            padding-bottom: 5px;
+        }
+
+        .profile-item {
+            display: flex;
+            
+            font-size: 16px;
+            color: #333;
+            
+        }
+
+        .profile-item strong {
+            color: #222;
+        }
+
+        /* Edit & Create Profile Buttons */
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .profile-btn {
+            background-color: #f67b2f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .profile-btn:hover {
+            background-color: #e46b20;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(45deg, #e3fdfd, #ffe6fa);
+            color: black;
+            text-align: center;
+            font-weight: bold;
+            padding: 15px;
+            margin-top: 35px;
+        }
+
+        /* Mobile Optimization */
+        @media screen and (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-center {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h2>{{ role }} Profile</h2>
-    <p><strong>User ID:</strong> {{ user['user_id'] }}</p>
-    <p><strong>Email:</strong> {{ user['email'] }}</p>
-
-    {% if user.get('profile') %}
-        <!-- ✅ Show Profile Details if Profile Exists -->
-        <h3>Addresses</h3>
-        <p><strong>Home Address:</strong> {{ user['profile'].get('addresses', {}).get('home', 'Not Available') }}</p>
-        <p><strong>Mailing Address:</strong> {{ user['profile'].get('addresses', {}).get('mailing', 'Not Available') }}</p>
-
-        <h3>Contact Details</h3>
-        <p><strong>Phone:</strong> {{ user['profile'].get('contact_details', {}).get('phone', 'Not Available') }}</p>
-        <p><strong>Email:</strong> {{ user['profile'].get('contact_details', {}).get('email', 'Not Available') }}</p>
-
-        <h3>Name</h3>
-        <p><strong>First Name:</strong> {{ user['profile'].get('name', {}).get('first_name', 'Not Available') }}</p>
-        <p><strong>Last Name:</strong> {{ user['profile'].get('name', {}).get('last_name', 'Not Available') }}</p>
-
-        <h3>Emergency Contacts</h3>
-        <p><strong>Contact Name:</strong> {{ user['profile'].get('emergency_contacts', {}).get('contact_name', 'Not Available') }}</p>
-        <p><strong>Contact Phone:</strong> {{ user['profile'].get('emergency_contacts', {}).get('contact_phone', 'Not Available') }}</p>
-
-        <h3>Additional Information</h3>
-        <p>{{ user['profile'].get('additional_information', 'Not Available') }}</p>
-
-        <h3>Assigned Equipment</h3>
-        {% if user['profile'].get('equipment_assigned') %}
-            <ul>
-                {% for item in user['profile']['equipment_assigned'] %}
-                    <li>{{ item }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No equipment assigned.</p>
-        {% endif %}
-        <a href="{{ url_for('profile_bp.edit_profile') }}">
-            <button>Edit Profile</button>
-        </a>
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <div class="nav-item">
+                <a href="{% if user['role'] == 'IT' %}{{ url_for('it_bp.it_dashboard') }}{% else %}{{ url_for('user_bp.dashboard') }}{% endif %}">Back</a>
+            </div>
+            <div class="edit-profile">
+                <a href="{{ url_for('profile_bp.edit_profile') }}">Edit Profile</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h2>User Profile</h2>
+        <div class="profile-section">
+            <div class="profile-item"><strong>User ID:</strong> <span>{{ user['user_id'] }}</span></div>
+            <div class="profile-item"><strong>Email:</strong> <span>{{ user['email'] }}</span></div>
+        </div>
         
-            {% if role == "User" %}
-                <a href="{{ url_for('user_bp.dashboard') }}">
-                    <button>Go to Dashboard</button>
-                </a>
-            {% elif role == "IT" %}
-                <a href="{{ url_for('it_bp.it_dashboard') }}">
-                    <button>Go to Dashboard</button>
-                </a>
-            {% endif %}
-
+        {% if 'profile' in user %}
+            <div class="profile-section">
+                <h3>Addresses</h3>
+                <div class="profile-item"><strong>Home Address:</strong> <span>{{ user['profile']['addresses'].get('home', 'Not Available') }}</span></div>
+                <div class="profile-item"><strong>Mailing Address:</strong> <span>{{ user['profile']['addresses'].get('mailing', 'Not Available') }}</span></div>
+            </div>
             
-     
-    {% else %}
-        <!-- ✅ Show Create Profile Option if Profile Doesn't Exist -->
-        <p><em>No profile information available.</em></p>
-        <a href="{{ url_for('profile_bp.create_profile') }}">
-            <button>Create Profile</button>
-
-        </a>
-        
-        
+            <div class="profile-section">
+                <h3>Contact Details</h3>
+                <div class="profile-item"><strong>Phone:</strong> <span>{{ user['profile']['contact_details'].get('phone', 'Not Available') }}</span></div>
+                <div class="profile-item"><strong>Email:</strong> <span>{{ user['profile']['contact_details'].get('email', 'Not Available') }}</span></div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Name</h3>
+                <div class="profile-item"><strong>First Name:</strong> <span>{{ user['profile']['name'].get('first_name', 'Not Available') }}</span></div>
+                <div class="profile-item"><strong>Last Name:</strong> <span>{{ user['profile']['name'].get('last_name', 'Not Available') }}</span></div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Emergency Contacts</h3>
+                <div class="profile-item"><strong>Contact Name:</strong> <span>{{ user['profile']['emergency_contacts'].get('contact_name', 'Not Available') }}</span></div>
+                <div class="profile-item"><strong>Contact Phone:</strong> <span>{{ user['profile']['emergency_contacts'].get('contact_phone', 'Not Available') }}</span></div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Additional Information</h3>
+                <div class="profile-item"><span>{{ user['profile'].get('additional_information', 'Not Available') }}</span></div>
+            </div>
+        {% else %}
+            <p style="text-align: center;"><em>No profile information available.</em></p>
+            <div class="button-container" style="text-align: center;">
+                <a href="{{ url_for('profile_bp.create_profile') }}">
+                    <button>Create Profile</button>
+                </a>
+            </div>
         {% endif %}
-
-        
+    </div>
+    <footer class="footer">
+        <p>© 2025 HireSync. All rights reserved.</p>
+    </footer>
 </body>
 </html>

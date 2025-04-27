@@ -5,83 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule Exit Interview</title>
     <style>
+        /* ✅ General Styles */
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* ✅ Navigation Bar */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: #d65f1a;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .nav-item a:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Form Container */
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+            width: 50%;
+            max-width: 600px;
+            text-align: center;
+            margin-top: 80px;
         }
 
         h2 {
-            margin-bottom: 15px;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
 
-        .form-container {
-            background:rgb(255, 255, 255);
-            padding: 20px;
-            border-radius: 10px;
-            width: fit-content;
+        /* ✅ Form Layout */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
         }
 
         label {
             font-weight: bold;
+            font-size: 16px;
         }
 
-        select, input[type="datetime-local"], button {
-            padding: 8px;
-            font-size: 14px;
+        select, input[type="datetime-local"] {
+            flex: 1;
+            padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 16px;
+            margin-left: 10px;
         }
 
-        select {
-            width: 250px;
-            margin-right: 10px;
-        }
-
-        input[type="datetime-local"] {
-            margin-right: 10px;
-        }
-
+        /* ✅ Button Styling */
         button {
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
             border: none;
+            padding: 12px 18px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            width: 100%;
+            max-width: 200px;
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
-
-        .dashboard-link {
-            display: block;
-            margin-bottom: 20px;
-        }
-
     </style>
 </head>
 <body>
 
-<h2>Your Offboarding Files</h2>
-<a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-link">Go to IT Dashboard</a>
+    <!-- ✅ Navigation Bar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-item">
+            <a href="{{ url_for('it_bp.it_dashboard') }}">Back</a>
+        </div>
+    </nav>
 
-<h2>Schedule Exit Interview</h2>
-<div class="form-container">
-    <form method="POST">
-        <label for="user_id">Select User:</label>
-        <select name="user_id" required>
-            <option value="" disabled selected>Choose a user...</option>
-            {% for user in users %}
-                <option value="{{ user.user_id }}">{{ user.display_name }} ({{ user.user_id }})</option>
-            {% endfor %}
-        </select>
-        
+    <!-- ✅ Centered Form -->
+    <div class="form-container">
+        <h2>Schedule Exit Interview</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="user_id">Select User:</label>
+                <select name="user_id" required>
+                    <option value="" disabled selected>Choose a user...</option>
+                    {% for user in users %}
+                        <option value="{{ user.user_id }}">{{ user.display_name }} ({{ user.user_id }})</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <label for="schedule_date">Schedule Date & Time:</label>
-        <input type="datetime-local" name="schedule_date" id="schedule_date" required>
+            <div class="form-group">
+                <label for="schedule_date">Schedule Date & Time:</label>
+                <input type="datetime-local" name="schedule_date" id="schedule_date" required>
+            </div>
 
-        <button type="submit">Schedule</button>
-    </form>
-</div>
+            <button type="submit">Schedule</button>
+        </form>
+    </div>
 
 </body>
 </html>

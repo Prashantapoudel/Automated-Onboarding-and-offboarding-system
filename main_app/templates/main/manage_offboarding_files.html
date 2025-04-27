@@ -4,22 +4,202 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Offboarding Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            padding-top: 50px;
+        }
+    
+            .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+    
+        .nav-right {
+            display: flex;
+            gap: 15px;
+        }
+    
+        .nav-item a, .edit-profile a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            background-color: #d65f1a;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 30px;
+        }
+    
+        .nav-item a:hover, .edit-profile a:hover {
+            background-color: #e46b20;
+        }
+    
+        .logout-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+    
+        .logout-btn:hover {
+            background-color: #df0218;
+        }
+        .content{
+            font-size: 15px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            padding: 10px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 10px auto;
+            width: 98%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        form {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+select {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* File Container Layout */
+.file-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* File Item Box */
+.file-item {
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.file-item:hover {
+    transform: scale(1.05);
+}
+
+/* Image Preview */
+.file-preview {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Buttons */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Danger Button (Delete) */
+button[type="submit"] {
+    background-color: #dc3545;
+}
+
+button[type="submit"]:hover {
+    background-color: #c82333;
+}
+
+/* Links Styled as Buttons */
+a button {
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+}
+
+a button:hover {
+    opacity: 0.9;
+}
+
+/* Message Text */
+p {
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+    </style>
 </head>
 <body>
 
-    <h2>Manage Offboarding Files</h2>
-    {% if current_user.is_authenticated %}
-        {% if current_user.role == 'IT' %}
-            <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
-                Go to IT Dashboard
-            </a>
-        {% else %}
-            <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
-                Go to User Dashboard
-            </a>
-        {% endif %}
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <div class="nav-item">
+                {% if current_user.is_authenticated %}
+    {% if current_user.role == 'IT' %}
+        <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
+            Back
+        </a>
+    {% else %}
+        <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
+            Back
+        </a>
     {% endif %}
-
+    {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <div class="content">    
+        <h2>Manage Offboarding Files</h2>
+        </div>
+    
     <!-- Select User Dropdown -->
     <form method="GET">
         <label>Select User:</label>
@@ -74,28 +254,6 @@
     {% else %}
         <p>Select a user to view their files.</p>
     {% endif %}
-
-    <style>
-        .file-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .file-item {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 8px;
-            width: 250px;
-            text-align: center;
-        }
-        .file-preview {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-top: 5px;
-        }
-    </style>
 
 </body>
 </html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create IT Payroll</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        /* ✅ General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px; /* Navbar spacing */
+        }
+
+        /* ✅ Navbar Styling */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #d65f1a;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Container */
+        .container {
+            max-width: 700px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* ✅ Form Input Styling */
+        .form-control {
+            border-radius: 5px;
+        }
+
+        /* ✅ Buttons */
+        .btn-create {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-create:hover {
+            background-color: #218838;
+        }
+
+        /* ✅ Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .back-button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <a href="{{ url_for('admin_payroll_bp.manage_it_payroll') }}" class="back-button">Back</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>📝 Create IT Payroll</h2>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Select IT Staff</label>
+                <select class="form-control" name="it_id" required>
+                    <option value="">-- Choose IT Staff --</option>
+                    {% for it in it_staff %}
+                        <option value="{{ it.user_id }}">
+                            {{ it.profile.name.first_name }} {{ it.profile.name.last_name }} ({{ it.user_id }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Hours Worked</label>
+                <input type="number" step="0.01" class="form-control" name="hours_worked" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Hourly Rate</label>
+                <input type="number" step="0.01" class="form-control" name="hourly_rate" required>
+            </div>
+
+            <button type="submit" class="btn btn-create">💾 Create Payroll</button>
+        </form>
+    </div>
+
+</body>
+</html>

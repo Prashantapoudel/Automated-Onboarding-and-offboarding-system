@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Tasks</title>
+    <style>
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 97%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: #d65f1a;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .nav-item a:hover {
+            background-color: #e46b20;
+        }
+
+        .task-container {
+            width: 80%;
+            margin: auto;
+            margin-top: 70px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .task-header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .task-meta {
+            font-size: 14px;
+            color: #555;
+        }
+        .task-desc {
+            margin: 10px 0;
+        }
+        .task-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .status-select {
+            margin-left: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <div class="nav-item">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'IT' %}
+                        <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">Back</a>
+                    {% else %}
+                        <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">Back</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="task-container">
+        <h2>My Tasks</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <ul>
+            {% for category, message in messages %}
+              <li style="color: {{ 'green' if category == 'success' else 'red' }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+      
+
+        {% if tasks %}
+            {% for task in tasks %}
+                <div class="task-block">
+                    <div class="task-header">{{ task.title }}</div>
+                    <div class="task-meta">
+                        Assigned by: <strong>{{ task.assigned_by_name }}</strong><br>
+                        Deadline: {{ task.deadline }}<br>
+                        Status: <strong>{{ task.status }}</strong>
+                    </div>
+
+                    <div class="task-desc">{{ task.description }}</div>
+
+                    <!-- ✅ Status Update -->
+                    <div class="task-status">
+                        <form method="POST" action="{{ url_for('main_task_bp.update_task_status', task_id=task._id) }}">
+                            <label for="status">Update Status:</label>
+                            <select name="status" class="status-select">
+                                <option value="Pending" {% if task.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Done" {% if task.status == 'Done' %}selected{% endif %}>Done</option>
+                            </select>
+                            <button type="submit">Update</button>
+                        </form>
+                    </div>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p><em>No tasks assigned yet.</em></p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

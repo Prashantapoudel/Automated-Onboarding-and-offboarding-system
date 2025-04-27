@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Payroll</title>
+    <style>
+        /* ✅ General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ✅ Navigation Bar */
+        .navbar-container {
+            background-color: #f67b2f;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right .nav-item a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: #0056b3;
+            transition: background 0.3s ease;
+        }
+
+        .nav-right .nav-item a:hover {
+            background-color: #003f7f;
+        }
+
+        /* ✅ Form Container */
+        .form-container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            margin: 30px auto;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* ✅ Form Labels & Inputs */
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* ✅ Submit Button */
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* ✅ Payroll Table */
+        .table-container {
+            width: 80%;
+            margin: 20px auto;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Navigation Bar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <div class="nav-item">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'IT' %}
+                        <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
+                            Back
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
+                            Back
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- ✅ Page Title -->
+    <h2 style="text-align: center; margin-top: 20px;">Manage Payroll</h2>
+
+    <!-- ✅ Payroll Update Form -->
+    <div class="form-container">
+        <form method="POST">
+            <label>Select Employee:</label>
+            <select name="user_id" required>
+                {% for user in users %}
+                    <option value="{{ user.user_id }}">{{ user.display_name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Hours Worked:</label>
+            <input type="number" name="hours_worked" step="0.1" required>
+
+            <label>Hourly Rate ($):</label>
+            <input type="number" name="hourly_rate" step="0.01" required>
+
+            <button type="submit">Update Payroll</button>
+        </form>
+    </div>
+
+    <!-- ✅ Payroll Records Table -->
+    <div class="table-container">
+        <h3 style="text-align: center;">Payroll Records</h3>
+        <table>
+            <tr>
+                <th>Employee</th>
+                <th>Hours Worked</th>
+                <th>Hourly Rate ($)</th>
+                <th>Total Pay ($)</th>
+                <th>Pay Date</th>
+                <th>Action</th>
+            </tr>
+            {% for record in payroll_data %}
+            <tr>
+                <td>{{ record.user_id }}</td>  <!-- ✅ Show Employee Name Instead of ID -->
+                <td>{{ record.hours_worked }}</td>
+                <td>${{ record.hourly_rate }}</td>
+                <td><strong>${{ record.total_pay }}</strong></td>
+                <td>{{ record.pay_date }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('exit_interview_bp.delete_payroll', payroll_id=record._id|string) }}">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this payroll record?')">
+                            🗑️ Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>

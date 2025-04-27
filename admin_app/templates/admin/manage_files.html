@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<a href="{{ url_for('admin_routes.admin_dashboard') }}" class="dashboard-button">
+    <button>Dashboard</button>
+</a>
+{% block content %}
+<h2>📂 Manage Uploaded Files</h2>
+
+{% if files %}
+    <table border="1">
+        <tr>
+            <th>File Name</th>
+            <th>Last Modified</th>
+            <th>Size (KB)</th>
+            <th>Actions</th>
+        </tr>
+        {% for file in files %}
+        <tr>
+            <td>{{ file.Key }}</td>
+            <td>{{ file.LastModified }}</td>
+            <td>{{ (file.Size / 1024) | round(2) }}</td>
+            <td>
+                <a href="https://{{ S3_BUCKET_NAME }}.s3.amazonaws.com/{{ file.Key }}" target="_blank">🔗 Download</a>
+                <form method="POST" action="{{ url_for('file_bp.delete_file') }}" style="display:inline;">
+                    <input type="hidden" name="file_key" value="{{ file.Key }}">
+                    <button type="submit">🗑️ Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No files found in the AWS S3 bucket.</p>
+{% endif %}
+{% endblock %}

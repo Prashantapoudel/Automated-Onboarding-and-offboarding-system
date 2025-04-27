@@ -1,9 +1,95 @@
-<form method="POST" action="{{ url_for('admin_routes.verify_otp', email=email) }}">
-    <label for="otp">Enter OTP:</label>
-    <input type="text" name="otp" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .otp-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .otp-container h2 {
+            margin-bottom: 20px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .verify-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            flex: 1;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .verify-button:hover {
+            background-color: #218838;
+        }
+        .cancel-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            flex: 1;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .cancel-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
 
-    <!-- Ensure email is included -->
-    <input type="hidden" name="email" value="{{ email }}">
+<div class="otp-container">
+    <h2>🔑 Verify OTP</h2>
+    <p>Please enter the **One-Time Password (OTP)** sent to your email.</p>
 
-    <button type="submit">Verify OTP</button>
-</form>
+    <form method="POST" action="{{ url_for('admin_routes.verify_otp', email=email) }}">
+        <input type="text" name="otp" class="form-control" placeholder="Enter OTP" required>
+
+        <!-- Ensure email is included -->
+        <input type="hidden" name="email" value="{{ email }}">
+
+        <!-- Button Group -->
+        <div class="button-group">
+            <button type="submit" class="verify-button">✅ Verify OTP</button>
+            <a href="{{ url_for('admin_routes.reset_password_request') }}" class="cancel-button">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

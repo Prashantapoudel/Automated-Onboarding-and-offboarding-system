@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
-from main_app.db_config import exit_interviews_collection, main_collection, it_collection, admin_collection
+from main_app.db_config import exit_interviews_collection, main_collection, it_collection, admin_collection,payroll_collection
 from utils.user_utils import get_all_users
 from datetime import datetime
 import smtplib, os
@@ -308,3 +308,81 @@ def user_exit_interview():
         return render_template("main/user_exit_interview.html", interview=None)  # ✅ Pass None to handle no interviews
 
     return render_template("main/user_exit_interview.html", interview=interview)
+
+
+
+
+@exit_interview_bp.route("/manage_payroll", methods=["GET", "POST"])
+@login_required
+def manage_payroll():
+    """Allow IT to manage payroll data for employees."""
+    users = get_all_users()  # ✅ Fetch all users
+
+    for user in users:
+        user["display_name"] = get_display_name(user["user_id"])
+    if request.method == "POST":
+        user_id = request.form.get("user_id")
+        user_name = get_display_name(user_id)
+        hours_worked = float(request.form.get("hours_worked"))
+        hourly_rate = float(request.form.get("hourly_rate"))
+
+        if not user_id or not hours_worked or not hourly_rate:
+            flash("❌ All fields are required!", "danger")
+            return redirect(url_for("exit_interview_bp.manage_payroll"))
+
+        total_pay = hours_worked * hourly_rate
+        pay_date = datetime.now().strftime("%Y-%m-%d")  # ✅ Store the current date
+
+        payroll_data = {
+            "user_id": user_id,
+            "hours_worked": hours_worked,
+            "hourly_rate": hourly_rate,
+            "total_pay": total_pay
+        }
+
+        # ✅ Prevent overriding the original pay_date
+        payroll_collection.update_one(
+            {"user_id": user_id},
+            {"$set": payroll_data, "$setOnInsert": {"pay_date": pay_date}},
+            upsert=True
+        )
+
+        flash(f"✅ Payroll updated for {get_display_name(user_id)}!", "success")
+        return redirect(url_for("exit_interview_bp.manage_payroll"))
+
+    # ✅ Fetch all payroll records
+    payroll_data = list(payroll_collection.find())
+
+    return render_template("main/manage_payroll.html", users=users, payroll_data=payroll_data)
+
+@exit_interview_bp.route("/delete_payroll/<payroll_id>", methods=["POST"])
+@login_required
+def delete_payroll(payroll_id):
+    """Delete a payroll record safely."""
+    payroll_record = payroll_collection.find_one({"_id": ObjectId(payroll_id)})
+
+    if not payroll_record:
+        flash("❌ Payroll record not found!", "danger")
+        return redirect(url_for("exit_interview_bp.manage_payroll"))
+
+    payroll_collection.delete_one({"_id": ObjectId(payroll_id)})
+    flash("🗑️ Payroll record deleted successfully!", "info")
+    return redirect(url_for("exit_interview_bp.manage_payroll"))
+
+@exit_interview_bp.route("/view_payroll", methods=["GET"])
+@login_required
+def view_payroll():
+    """Allow users to view their payroll details with default values."""
+    payroll = payroll_collection.find_one({"user_id": current_user.user_id})
+
+    if not payroll:
+        payroll = {
+            "user_id": current_user.user_id,
+            "hours_worked": 0,
+            "hourly_rate": 0,
+            "total_pay": 0,
+            "pay_date": "N/A"
+        }
+        flash("⚠️ No payroll data found. Displaying default values.", "warning")
+
+    return render_template("main/user_payroll.html", payroll=payroll)

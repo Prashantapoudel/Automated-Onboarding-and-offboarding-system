@@ -3,20 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f8f9fa;
+        padding-top: 50px;
+    }
 
-<h2>Upload Onboarding File</h2>
-{% if current_user.is_authenticated %}
+    /* Fixed Navbar */
+    .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 24px;
+        background-color: #f67b2f;
+        position: fixed;
+        top: 0;
+        width: 98%;
+        z-index: 1000;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand {
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+    }
+
+    .nav-right {
+        display: flex;
+        gap: 15px;
+    }
+
+    .nav-item a, .edit-profile a {
+        color: white;
+        text-decoration: none;
+        padding: 10px;
+        background-color: #d65f1a;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-right: 30px;
+    }
+
+    .nav-item a:hover, .edit-profile a:hover {
+        background-color: #e46b20;
+    }
+
+    .logout-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #df0218;
+    }
+    .content{
+        font-size: 15px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 10px auto;
+        width: 98%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    /* General Form Styling */
+form {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Labels */
+label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: #333;
+}
+
+/* Dropdown (Select) */
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    background-color: #f8f8f8;
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: #007bff;
+}
+
+/* File Input */
+input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f8f8f8;
+    cursor: pointer;
+}
+
+/* Upload Button */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    form {
+        width: 90%;
+    }
+}
+
+</style
+</head>
+<nav class="navbar-container">
+    <a class="navbar-brand" href="#">HireSync</a>
+    <div class="nav-right">
+        <div class="nav-item">
+            {% if current_user.is_authenticated %}
 {% if current_user.role == 'IT' %}
     <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
-        Go to IT Dashboard
+        Back
     </a>
 {% else %}
     <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
-        Go to User Dashboard
+        Back
     </a>
 {% endif %}
 {% endif %}
+        </div>
+    </div>
+</nav>
+<div class="content">    
+<h2>Upload Onboarding File</h2>
+</div>
 <form method="POST" enctype="multipart/form-data">
     <label for="file_type">File Type:</label>
     <select name="file_type" required>

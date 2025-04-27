@@ -1,0 +1,303 @@
+<script>
+    // Prevent Browser from Caching the Page After Logout
+    (function() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onload = function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        };
+    })();
+</script>
+
+{% block content %}
+<style>
+    /* Full-Screen Layout Adjustments */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #f8f9fa;
+        padding-top: 50px; /* Prevent content from being hidden under the fixed navbar */
+    }
+
+    /* Fixed Navbar with Spacing */
+    .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 25px;
+        background-color: #f67b2f;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 98%;
+        z-index: 1000;
+        height: 70px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        padding: 20px 0;
+    }
+
+    .navbar-brand {
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        margin-right: auto;
+    }
+
+    .nav-center {
+        display: flex;
+        font-size: 20px;
+        gap: 15px;
+        margin: auto;
+    }
+
+    .nav-item a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px 15px;
+    }
+
+    .nav-item a:hover {
+        text-decoration: underline;
+    }
+
+    .logout-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #df0218;
+    }
+
+    /* Container for Welcome Section */
+    .cont {
+        font-size: 25px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 20px auto;
+        width: 97%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .company-policies {
+    text-align: center;
+    padding: 60px 20px;
+    background: #ffffff;
+}
+
+.policies-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.policies-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1000px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.policies-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    background: #e3f2fd;
+}
+
+.policies-section h3 {
+    font-size: 24px;
+    color: #ff6600;
+    margin-bottom: 10px;
+}
+
+.policies-section p {
+    font-size: 18px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.policies-left {
+    text-align: left;
+}
+
+.policies-right {
+    text-align: right;
+}
+
+/* Alternate policy sections for left and right alignment */
+.policies-section:nth-child(even) {
+    flex-direction: row-reverse;
+}
+    
+
+    .footer {
+        background: linear-gradient(45deg, #e3fdfd, #ffe6fa);
+        color: black;
+        text-align: center;
+        font-weight: bold;
+        padding: 15px;
+        margin-top: 35px;
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+    .company-policies {
+        padding: 40px 15px;
+    }
+
+    .policies-section {
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .policies-left,
+    .policies-right {
+        text-align: center;
+    }
+
+    .policies-section h3 {
+        font-size: 22px;
+    }
+
+    .policies-section p {
+        font-size: 16px;
+    }
+}
+
+</style>
+
+
+
+<div class="navbar-container">
+    <nav class="navbar">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-center">
+            <div class="nav-item">
+                <a href="{% if user['role'] == 'IT' %}{{ url_for('it_bp.it_dashboard') }}{% else %}{{ url_for('user_bp.dashboard') }}{% endif %}">Home</a>
+            </div>
+            <div class="nav-item"><a href="/overview">Company Overview</a></div>
+            <div class="nav-item"><a href="/policies">Company Policies</a></div>
+            <div class="nav-item"><a href="/history">Company History</a></div>
+        </div>
+    </nav>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
+
+<div class="cont">
+    <h2>Company Policies</h2>
+</div>
+
+<main class="company-policies">
+    <div class="policies-container">
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 1. Code of Conduct</h3>
+                <p>Employees must maintain professionalism at all times. Discrimination, harassment, or workplace bullying will not be tolerated.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 2. Attendance & Punctuality</h3>
+                <p>Employees are expected to report to work on time. Unapproved absences may result in disciplinary action.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 3. Work Hours & Breaks</h3>
+                <p>Standard work hours are 9 AM - 5 PM. Employees are entitled to a 1-hour lunch break.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 4. Remote Work Policy</h3>
+                <p>Remote employees must adhere to designated work hours and maintain regular check-ins with managers.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 5. IT & Security Policy</h3>
+                <p>Employees must keep company devices secure. Sharing of passwords is strictly prohibited.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 6. Anti-Harassment & Equal Opportunity</h3>
+                <p>The company provides a safe and inclusive work environment. Any form of harassment will lead to strict disciplinary action.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 7. Data Privacy & Confidentiality</h3>
+                <p>Employees must safeguard company and customer data. Unauthorized disclosure of confidential information is a serious offense.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 8. Employee Benefits & Compensation</h3>
+                <p>The company provides health insurance, paid leave, and performance bonuses. Employees should review their contracts for complete details on compensation.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 9. Resignation & Termination</h3>
+                <p>Employees must provide a notice period before resignation. The company reserves the right to terminate employment due to misconduct, performance issues, or policy violations.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 10. Workplace Safety</h3>
+                <p>Employees must follow workplace safety guidelines. Report any hazards to management immediately.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<footer class="footer">
+    <p>© 2025 Hiresync. All rights reserved.</p>
+</footer>
+
+<script>
+    function buttonClick(event, pageUrl) {
+        window.location.href = pageUrl;
+    }
+</script>
+{% endblock %}

@@ -12,6 +12,8 @@ import smtplib
 from admin_app import app, mail 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+
 # from admin_app.admin import app, mail
 
 load_dotenv()
@@ -91,6 +93,20 @@ def admin_dashboard():
         return redirect(url_for('admin_routes.login'))
     return render_template('admin/dashboard.html')
 
+@admin_bp.route('/history')
+@login_required
+def admin_History():
+    return render_template('admin/History.html', user=current_user)
+
+@admin_bp.route('/overview')
+@login_required
+def admin_Overview():
+    return render_template('admin/Overview.html', user=current_user)
+
+@admin_bp.route('/policies')
+@login_required
+def admin_Policies():
+    return render_template('admin/Policies.html', user=current_user)  # ✅ Pass user
 
 
 ###   email password change 

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profiles</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px; /* For navbar spacing */
+        }
+
+        /* ✅ Navbar Styling */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #d65f1a;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Tables */
+        .table-container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* ✅ Buttons */
+        .action-links a {
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        .view-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* ✅ Mobile Responsive */
+        @media (max-width: 600px) {
+            .table-container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .back-button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="back-button">Back</a>
+        </div>
+    </nav>
+
+    <div class="table-container">
+        <h2>All Employee Profiles</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.display_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>User</td>
+                <td class="action-links">
+                    <a href="{{ url_for('profile_bp.view_profile', user_id=user.user_id) }}" class="view-btn">View</a>
+                    <a href="{{ url_for('profile_bp.edit_profile', user_id=user.user_id) }}" class="edit-btn">Edit</a>
+                    <form method="POST" action="{{ url_for('profile_bp.delete_profile', user_id=user.user_id) }}" style="display:inline;">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="table-container">
+        <h3>IT Profiles</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            {% for it_user in it_users %}
+            <tr>
+                <td>{{ it_user.display_name }}</td>
+                <td>{{ it_user.email }}</td>
+                <td>IT</td>
+                <td class="action-links">
+                    <a href="{{ url_for('profile_bp.view_profile', user_id=it_user.user_id) }}" class="view-btn">View</a>
+                    <a href="{{ url_for('profile_bp.edit_profile', user_id=it_user.user_id) }}" class="edit-btn">Edit</a>
+                    <form method="POST" action="{{ url_for('profile_bp.delete_profile', user_id=it_user.user_id) }}" style="display:inline;">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>

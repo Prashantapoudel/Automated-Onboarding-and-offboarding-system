@@ -2,14 +2,88 @@
 <html lang="en">
 <head>
     <title>Messages</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px; /* For navbar spacing */
         }
+
+        /* ✅ Navbar Styling */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #d65f1a;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 19px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Messages Container */
+        .messages-container {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ✅ Dropdown Style */
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+
+        /* ✅ Chat Box */
         .chat-box {
             max-height: 400px;
             overflow-y: auto;
@@ -18,112 +92,149 @@
             background: white;
             border-radius: 8px;
         }
+
         .message {
-            padding: 8px;
-            margin: 5px 0;
+            padding: 10px;
+            margin: 8px 0;
             border-radius: 5px;
             max-width: 75%;
             word-wrap: break-word;
+            font-size: 14px;
         }
+
         .sent {
             background-color: #dcf8c6;
-            align-self: flex-end;
             text-align: right;
+            align-self: flex-end;
+            margin-left: auto;
         }
+
         .received {
             background-color: #fff;
             border: 1px solid #ddd;
             text-align: left;
         }
+
         .timestamp {
             font-size: 0.75em;
             color: #777;
+            display: block;
+            margin-top: 3px;
         }
+
         .message-container {
             display: flex;
             flex-direction: column;
         }
+
+        /* ✅ Chat Input */
         .chat-input {
             margin-top: 10px;
             display: flex;
             gap: 10px;
         }
+
         .chat-input textarea {
             flex: 1;
-            padding: 5px;
+            padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
         }
-        .chat-input button {
-            padding: 5px 10px;
+
+        .send-button {
+            padding: 10px 15px;
             border-radius: 5px;
             border: none;
             background-color: #007bff;
             color: white;
             cursor: pointer;
+            font-size: 14px;
         }
-        .chat-input button:hover {
+
+        .send-button:hover {
             background-color: #0056b3;
+        }
+
+        /* ✅ Mobile Responsive Design */
+        @media (max-width: 600px) {
+            .messages-container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .back-button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .send-button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="dashboard-button">
-        <button>Dashboard</button>
-    </a>
-    <h2>Messages</h2>
 
-    <!-- ✅ Select Chat Recipient -->
-    <form method="GET">
-        <label>Choose a Chat:</label>
-        <select name="recipient_id" onchange="this.form.submit()">
-            <option value="" disabled {{ 'selected' if not selected_recipient else '' }}>Select a user...</option>
-            {% for user in users %}
-                <option value="{{ user['user_id'] }}" {{ 'selected' if user['user_id'] == selected_recipient else '' }}>
-                    {{ user['display_name'] }} ({{ user['role'] }})
-                </option>
-            {% endfor %}
-        </select>
-        
-    </form>
+    <!-- ✅ Navbar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="back-button">Back</a>
+        </div>
+    </nav>
 
- <!-- ✅ Display Messages for Selected Recipient -->
-<div class="chat-box">
-    {% if selected_recipient %}
-        {% for message in messages %}
-            <div class="message-container">
-                {% if message['sender_id'] == current_user.id %}
-                    <!-- ✅ Messages sent by current user (Align Right - Green) -->
-                    <div class="message sent">
-                        <strong>You</strong>: {{ message['message_text'] }}
-                        <div class="timestamp">{{ message['timestamp'] }}</div>
-                    </div>
-                {% else %}
-                    <!-- ✅ Messages received from others (Align Left - Gray) -->
-                    <div class="message received">
-                        <strong>{{ message['sender_name'] if message.get('sender_name') else message['sender_id'] }}</strong>: 
-                        {{ message['message_text'] }}
-                        <div class="timestamp">{{ message['timestamp'] }}</div>
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-    {% else %}
-        <p><em>Select a recipient to view messages.</em></p>
-    {% endif %}
-</div>
+    <div class="messages-container">
+        <h2>Messages</h2>
 
-
-
-    <!-- ✅ Send Message Form -->
-    {% if selected_recipient %}
-        <form method="POST" class="chat-input">
-            <input type="hidden" name="recipient_id" value="{{ selected_recipient }}">
-            <textarea name="message_text" placeholder="Type your message here..."></textarea>
-            <button type="submit">Send</button>
+        <!-- ✅ Select Chat Recipient -->
+        <form method="GET">
+            <label>Choose a Chat:</label>
+            <select name="recipient_id" onchange="this.form.submit()">
+                <option value="" disabled {{ 'selected' if not selected_recipient else '' }}>Select a user...</option>
+                {% for user in users %}
+                    <option value="{{ user['user_id'] }}" {{ 'selected' if user['user_id'] == selected_recipient else '' }}>
+                        {{ user['display_name'] }} ({{ user['role'] }})
+                    </option>
+                {% endfor %}
+            </select>
         </form>
-    {% endif %}
+
+        <!-- ✅ Display Messages for Selected Recipient -->
+        <div class="chat-box">
+            {% if selected_recipient %}
+                {% for message in messages %}
+                    <div class="message-container">
+                        {% if message['sender_id'] == current_user.id %}
+                            <!-- ✅ Messages sent by current user (Align Right - Green) -->
+                            <div class="message sent">
+                                <strong>You</strong>: {{ message['message_text'] }}
+                                <span class="timestamp">{{ message['timestamp'] }}</span>
+                            </div>
+                        {% else %}
+                            <!-- ✅ Messages received from others (Align Left - Gray) -->
+                            <div class="message received">
+                                <strong>{{ message['sender_name'] if message.get('sender_name') else message['sender_id'] }}</strong>: 
+                                {{ message['message_text'] }}
+                                <span class="timestamp">{{ message['timestamp'] }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p><em>Select a recipient to view messages.</em></p>
+            {% endif %}
+        </div>
+
+        <!-- ✅ Send Message Form -->
+        {% if selected_recipient %}
+            <form method="POST" class="chat-input">
+                <input type="hidden" name="recipient_id" value="{{ selected_recipient }}">
+                <textarea name="message_text" placeholder="Type your message here..."></textarea>
+                <button type="submit" class="send-button">Send</button>
+            </form>
+        {% endif %}
+    </div>
+
 </body>
-
-
 </html>

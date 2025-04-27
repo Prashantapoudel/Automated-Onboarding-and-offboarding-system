@@ -48,6 +48,7 @@ from main_app.routes.it_create_user import it_create_user_bp  # ✅ Import IT Cr
 from main_app.routes.messaging_routes import messaging_bp  # ✅ Import messaging blueprint
 from main_app.routes.file_upload import file_upload_bp  # ✅ Import file upload blueprint
 from main_app.routes.exit_interview import exit_interview_bp  # ✅ Import Exit Interview Blueprint
+from main_app.routes.main_task_route import main_task_bp  # ✅ Import Main Task Route
 
 main_app.register_blueprint(user_bp)
 main_app.register_blueprint(it_bp)
@@ -59,6 +60,7 @@ main_app.register_blueprint(it_create_user_bp)
 main_app.register_blueprint(messaging_bp)
 main_app.register_blueprint(file_upload_bp)
 main_app.register_blueprint(exit_interview_bp)
+main_app.register_blueprint(main_task_bp)  # ✅ Register Main Task Route
 
 @login_manager.unauthorized_handler
 def unauthorized():

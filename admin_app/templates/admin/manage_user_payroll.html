@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage User Payroll</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        /* ✅ General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px; /* Navbar spacing */
+        }
+
+        /* ✅ Navbar Styling */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #d65f1a;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Container */
+        .container {
+            max-width: 900px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* ✅ Table Styling */
+        .table {
+            margin-top: 20px;
+        }
+
+        .table th {
+            background: #343a40;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* ✅ Buttons */
+        .btn-edit {
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn-edit:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn-delete:hover {
+            background-color: #bd2130;
+        }
+
+        /* ✅ Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .back-button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="back-button">Back</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>📊 Manage User Payroll</h2>
+
+        {% if user_payrolls %}
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>User Name</th>
+                        <th>User ID</th>
+                        <th>Hours Worked</th>
+                        <th>Hourly Rate</th>
+                        <th>Total Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payroll in user_payrolls %}
+                    <tr>
+                        <td>{{ payroll.user_name }}</td>
+                        <td>{{ payroll.user_id }}</td>
+                        <td>{{ payroll.hours_worked }}</td>
+                        <td>${{ payroll.hourly_rate }}</td>
+                        <td>${{ payroll.total_payment }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_payroll_bp.edit_user_payroll', payroll_id=payroll._id) }}" class="btn btn-edit">✏️ Edit</a>
+                            <form action="{{ url_for('admin_payroll_bp.delete_user_payroll', payroll_id=payroll._id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-delete">🗑️ Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                No payroll data available.
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

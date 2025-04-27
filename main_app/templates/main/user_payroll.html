@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Payroll</title>
+    <style>
+        /* ✅ General Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            padding-top: 60px; /* Space for fixed navbar */
+            text-align: center;
+        }
+
+        /* ✅ Navbar */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .dashboard-button {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: #d65f1a;
+            border-radius: 5px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dashboard-button:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Payroll Section */
+        .content {
+            font-size: 20px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            padding: 12px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 85%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .payroll-box {
+            width: 80%;
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .payroll-box p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .payroll-box strong {
+            color: #333;
+        }
+
+        /* ✅ Dashboard Button */
+        .btn-primary {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <div class="nav-item">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'IT' %}
+                        <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">Back</a>
+                    {% else %}
+                        <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">Back</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- ✅ Page Title -->
+    <div class="content">
+        <h2>My Payroll</h2>
+    </div>
+
+    <!-- ✅ Payroll Info -->
+    <div class="payroll-box">
+        {% if payroll %}
+            <p><strong>Hours Worked:</strong> {{ payroll.hours_worked }}</p>
+            <p><strong>Hourly Rate:</strong> ${{ payroll.hourly_rate }}</p>
+            <p><strong>Total Pay:</strong> <strong>${{ payroll.total_pay }}</strong></p>
+            <p><strong>Pay Date:</strong> {{ payroll.pay_date }}</p>
+        {% else %}
+            <p>No payroll record found.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

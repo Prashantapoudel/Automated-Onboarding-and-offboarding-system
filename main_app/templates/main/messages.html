@@ -1,100 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages</title>
     <style>
+        /* ✅ General Styles */
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
+
+        /* ✅ Navigation Bar */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: #d65f1a;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .nav-item a:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Messages Header */
+        .messages-header {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 900px;
+            margin-top: 80px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .messages-header h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* ✅ Chat Selection */
+        .chat-selection {
+            margin: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* ✅ Chat Box */
         .chat-box {
             max-height: 400px;
             overflow-y: auto;
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 15px;
             background: white;
             border-radius: 8px;
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
+
+        .message-container {
+            display: flex;
+            flex-direction: column;
+        }
+
         .message {
-            padding: 8px;
-            margin: 5px 0;
-            border-radius: 5px;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
             max-width: 75%;
             word-wrap: break-word;
         }
+
         .sent {
             background-color: #dcf8c6;
             align-self: flex-end;
             text-align: right;
         }
+
         .received {
             background-color: #fff;
             border: 1px solid #ddd;
             text-align: left;
         }
+
         .timestamp {
             font-size: 0.75em;
             color: #777;
         }
-        .message-container {
-            display: flex;
-            flex-direction: column;
-        }
+
+        /* ✅ Chat Input */
         .chat-input {
-            margin-top: 10px;
+            margin-top: 15px;
             display: flex;
             gap: 10px;
+            width: 80%;
+            max-width: 900px;
         }
+
         .chat-input textarea {
             flex: 1;
-            padding: 5px;
+            padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 16px;
         }
+
         .chat-input button {
-            padding: 5px 10px;
+            padding: 10px 15px;
             border-radius: 5px;
             border: none;
             background-color: #007bff;
             color: white;
             cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
         }
+
         .chat-input button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    {% if current_user.is_authenticated %}
-        {% if current_user.role == 'IT' %}
-            <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">
-                Go to IT Dashboard
-            </a>
-        {% else %}
-            <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">
-                Go to User Dashboard
-            </a>
-        {% endif %}
-    {% endif %}
-    </a>
-    <h2>Messages</h2>
+
+    <!-- ✅ Navigation Bar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-item">
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == 'IT' %}
+                    <a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">Back</a>
+                {% else %}
+                    <a href="{{ url_for('user_bp.dashboard') }}" class="dashboard-button">Back</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- ✅ Messages Header -->
+    <div class="messages-header">
+        <h2>Messages</h2>
+    </div>
 
     <!-- ✅ Select Chat Recipient -->
-    <form method="GET">
-        <label>Choose a Chat:</label>
-        <select name="recipient_id" onchange="this.form.submit()">
-            <option value="" disabled {{ 'selected' if not selected_recipient else '' }}>Select a user...</option>
-            {% for user in users %}
-                <option value="{{ user['user_id'] }}" {{ 'selected' if user['user_id'] == selected_recipient else '' }}>
-                    {{ user['display_name'] }} ({{ user['role'] }})
-                </option>
-            {% endfor %}
-        </select>
-        
-    </form>
+    <div class="chat-selection">
+        <form method="GET">
+            <label>Choose a Chat:</label>
+            <select name="recipient_id" onchange="this.form.submit()">
+                <option value="" disabled {{ 'selected' if not selected_recipient else '' }}>Select a user...</option>
+                {% for user in users %}
+                    <option value="{{ user['user_id'] }}" {{ 'selected' if user['user_id'] == selected_recipient else '' }}>
+                        {{ user['display_name'] }} ({{ user['role'] }})
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
 
     <!-- ✅ Display Messages for Selected Recipient -->
     <div class="chat-box">
@@ -115,10 +215,9 @@
                 </div>
             {% endfor %}
         {% else %}
-            <p><em>Select a recipient to view messages.</em></p>
+            <p style="text-align: center; font-style: italic;">Select a recipient to view messages.</p>
         {% endif %}
     </div>
-
 
     <!-- ✅ Send Message Form -->
     {% if selected_recipient %}
@@ -128,7 +227,6 @@
             <button type="submit">Send</button>
         </form>
     {% endif %}
+
 </body>
-
-
 </html>

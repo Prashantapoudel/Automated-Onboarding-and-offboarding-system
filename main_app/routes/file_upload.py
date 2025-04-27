@@ -5,7 +5,7 @@ import boto3
 import os
 from bson import ObjectId
 from dotenv import load_dotenv
-from main_app.db_config import offboarding_files_collection, onboarding_files_collection, main_collection, it_collection, admin_collection
+from main_app.db_config import offboarding_files_collection, onboarding_files_collection, main_collection, it_collection, admin_collection, offboarding_files_userside_upload_collection
 from utils.user_utils import get_all_users
 
 # ✅ Load environment variables
@@ -22,6 +22,9 @@ AWS_ONBOARDING_BUCKET = os.getenv("AWS_ONBOARDING_BUCKET")
 AWS_ONBOARDING_ACCESS_KEY = os.getenv("AWS_ONBOARDING_ACCESS_KEY")
 AWS_ONBOARDING_SECRET_KEY = os.getenv("AWS_ONBOARDING_SECRET_KEY")
 
+AWS_OFFBOARDING_USER_BUCKET = os.getenv("AWS_OFFBOARDING_USER_BUCKET")
+AWS_OFFBOARDING_USER_ACCESS_KEY = os.getenv("AWS_OFFBOARDING_USER_ACCESS_KEY")
+AWS_OFFBOARDING_USER_SECRET_KEY = os.getenv("AWS_OFFBOARDING_USER_SECRET_KEY")
 # ✅ Initialize separate S3 clients
 s3_offboarding = boto3.client(
     "s3",
@@ -36,7 +39,12 @@ s3_onboarding = boto3.client(
     aws_secret_access_key=AWS_ONBOARDING_SECRET_KEY,
     region_name=AWS_S3_REGION
 )
-
+s3_offboarding_user = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_OFFBOARDING_USER_ACCESS_KEY,
+    aws_secret_access_key=AWS_OFFBOARDING_USER_SECRET_KEY,
+    region_name=AWS_S3_REGION
+)
 # ✅ File Upload Blueprint
 file_upload_bp = Blueprint("file_upload_bp", __name__)
 
@@ -156,7 +164,11 @@ def upload_onboarding_file():
 def view_offboarding_files():
     """Users can ONLY view the offboarding files uploaded for them"""
     files = list(offboarding_files_collection.find({"user_id": current_user.user_id}))
-    return render_template("main/view_offboarding_files.html", files=files)
+    user_files = list(offboarding_files_userside_upload_collection.find({"user_id": current_user.user_id}))
+
+    all_files = files + user_files  # Combine them
+
+    return render_template("main/view_offboarding_files.html", files=all_files)
 
 @file_upload_bp.route('/view_onboarding_files', methods=['GET'])
 @login_required
@@ -289,11 +301,15 @@ def manage_offboarding_files():
 
     selected_user_id = request.args.get("user_id", "").strip()
     files = []
-
+    all_files = []
     if selected_user_id:
         files = list(offboarding_files_collection.find({"user_id": selected_user_id}))
+        user_files = list(offboarding_files_userside_upload_collection.find({"user_id": selected_user_id}))
 
-    return render_template("main/manage_offboarding_files.html", users=all_users, files=files, selected_user_id=selected_user_id)
+        all_files = files + user_files  # Combine them
+
+
+    return render_template("main/manage_offboarding_files.html", users=all_users, files=all_files, selected_user_id=selected_user_id)
 
 
 @file_upload_bp.route('/it_view_onboarding_files', methods=['GET'])
@@ -403,3 +419,48 @@ def delete_user_onboarding_file(file_id):
         flash(f"❌ File deletion failed: {str(e)}", "danger")
 
     return redirect(url_for("file_upload_bp.view_onboarding_files"))  # ✅ Fixed redirection
+
+
+@file_upload_bp.route('/upload_offboarding_file_user', methods=['GET', 'POST'])
+@login_required
+def upload_offboarding_file_user():
+    """User uploads offboarding files – restricted to their own ID only."""
+
+    user_id = getattr(current_user, "user_id", None)  # ✅ Automatically fetch user_id from current session
+    display_name = get_display_name(user_id)
+
+    if request.method == 'POST':
+        file_type = request.form.get("file_type", "").strip()
+        file = request.files.get("file")
+
+        if not file_type or not file:
+            flash("❌ All fields are required!", "danger")
+            return redirect(url_for("file_upload_bp.upload_offboarding_file_user"))
+
+        s3_file_path = f"{file_type}/{user_id}/{file.filename}"
+
+        try:
+            # ✅ Upload to User Offboarding Bucket
+            s3_offboarding.upload_fileobj(file, AWS_OFFBOARDING_USER_BUCKET, s3_file_path)
+
+            # ✅ Generate S3 File URL
+            file_url = f"https://{AWS_OFFBOARDING_USER_BUCKET}.s3.{AWS_S3_REGION}.amazonaws.com/{s3_file_path}"
+
+            # ✅ Save in the User Offboarding Collection
+            offboarding_files_userside_upload_collection.insert_one({
+                "user_id": user_id,
+                "file_type": file_type,
+                "file_name": file.filename,
+                "s3_url": file_url,
+                "uploaded_at": datetime.utcnow(),
+                "process_type": "offboarding"
+            })
+
+            flash("✅ Offboarding file uploaded successfully!", "success")
+            return redirect(url_for("file_upload_bp.upload_offboarding_file_user"))
+
+        except Exception as e:
+            flash(f"❌ File upload failed: {str(e)}", "danger")
+            return redirect(url_for("file_upload_bp.upload_offboarding_file_user"))
+
+    return render_template("main/upload_offboarding_file_user.html", display_name=display_name)

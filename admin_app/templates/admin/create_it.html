@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create IT User</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        /* ✅ General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px; /* Navbar spacing */
+        }
+
+        /* ✅ Navbar Styling */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #d65f1a;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Container */
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* ✅ Form */
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        /* ✅ Buttons */
+        .btn-create {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-create:hover {
+            background-color: #218838;
+        }
+
+        /* ✅ Mobile Responsive */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            .back-button {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-right">
+            <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="back-button">Back</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>🖥️ Create IT User</h2>
+
+        <form method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="first_name" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" required>
+            </div>
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">IT Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="equipment" class="form-label">Assign Equipment (Optional)</label>
+                <select class="form-select" name="equipment" multiple>
+                    <option value="Laptop">💻 Laptop</option>
+                    <option value="Monitor">🖥️ Monitor</option>
+                    <option value="Mouse">🖱️ Mouse</option>
+                    <option value="Keyboard">⌨️ Keyboard</option>
+                    <option value="Headset">🎧 Headset</option>
+                    <option value="Phone">📞 Phone</option>
+                </select>
+                <small class="text-muted">Hold CTRL (Windows) / CMD (Mac) to select multiple items.</small>
+            </div>
+
+            <button type="submit" class="btn-create">✅ Create IT User</button>
+        </form>
+    </div>
+
+</body>
+</html>

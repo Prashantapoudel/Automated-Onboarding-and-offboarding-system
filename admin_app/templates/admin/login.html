@@ -1,35 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
+    <style>
+        /* ✅ General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ✅ Full Page Layout */
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #f4f4f4;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ✅ Left Side (Background Image) */
+        .left-side {
+            width: 70%;
+            background: url("{{ url_for('static', filename='photos/Hiresync_office.jpg') }}") no-repeat center center;
+            background-size: cover;
+        }
+
+        /* ✅ Right Side (Login Box) */
+        .right-side {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+
+        .login-box {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        /* ✅ Title Styling */
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffc400;
+            font-family: 'Trebuchet MS', sans-serif;
+            margin-bottom: 15px;
+        }
+
+        /* ✅ Flash Message Styling */
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* ✅ Form Inputs */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        /* ✅ Buttons */
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0078d7;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        /* ✅ Reset Password Button */
+        .reset-btn {
+            background-color: #0066cc;
+            margin-top: 5px;
+        }
+
+        .reset-btn:hover {
+            background-color: #004a99;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ✅ Left Side (Background Image) -->
+        <div class="left-side"></div>
+
+        <!-- ✅ Right Side (Login Box) -->
+        <div class="right-side">
+            <div class="login-box">
+                <h2>Admin Login</h2>
+
+                <!-- ✅ Flash Messages -->
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p class="error-message">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- ✅ Login Form -->
+                <form method="POST">
+                    <div class="form-group">
+                        <label>UserId</label>
+                        <input type="text" name="user_id" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" name="password" required>
+                    </div>
+
+                    <button type="submit">Login</button>
+                </form>
+
+                <!-- ✅ Reset Password Button -->
+                <a href="{{ url_for('admin_routes.reset_password_request') }}">
+                    <button type="button" class="reset-btn">Reset Password</button>
+                </a>
+            </div>
+        </div>        
+    </div>
+
+    <!-- ✅ Disable Back Button After Logout -->
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
 
-        window.onload = function() {
-            window.history.forward(); // Disables back button
+        window.onload = function () {
+            window.history.forward();
         };
     </script>
-</head>
-<body>
-    <h2>Admin Login</h2>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: red;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <form method="POST">
-        <label>UserId</label>
-        <input type="text" name="user_id" required>
-        <label>Password:</label>
-        <input type="password" name="password" required>
-        <button type="submit">Login</button>
-    </form>
-    <a href="{{ url_for('admin_routes.reset_password_request') }}">
-        <button type="button">Reset Password</button>
-    </a>
 </body>
 </html>

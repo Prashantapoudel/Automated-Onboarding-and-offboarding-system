@@ -1,0 +1,269 @@
+<script>
+    // Prevent Browser from Caching the Page After Logout
+    (function() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onload = function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        };
+    })();
+</script>
+
+{% block content %}
+<style>
+    /* Full-Screen Layout Adjustments */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #f8f9fa;
+        padding-top: 50px; /* Prevent content from being hidden under the fixed navbar */
+    }
+
+    /* Fixed Navbar with Spacing */
+    .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 25px;
+        background-color: #f67b2f;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 98%;
+        z-index: 1000;
+        height: 70px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        padding: 20px 0;
+    }
+
+    .navbar-brand {
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        margin-right: auto;
+    }
+
+    .nav-center {
+        display: flex;
+        font-size: 20px;
+        gap: 15px;
+        margin: auto;
+    }
+
+    .nav-item a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px 15px;
+    }
+
+    .nav-item a:hover {
+        text-decoration: underline;
+    }
+
+   
+
+    /* Container for Welcome Section */
+    .cont {
+        font-size: 25px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 20px auto;
+        width: 97%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .company-policies {
+    text-align: center;
+    padding: 60px 20px;
+    background: #ffffff;
+}
+
+.policies-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.policies-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1000px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.policies-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    background: #e3f2fd;
+}
+
+.policies-section h3 {
+    font-size: 24px;
+    color: #ff6600;
+    margin-bottom: 10px;
+}
+
+.policies-section p {
+    font-size: 18px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.policies-left {
+    text-align: left;
+}
+
+.policies-right {
+    text-align: right;
+}
+
+/* Alternate policy sections for left and right alignment */
+.policies-section:nth-child(even) {
+    flex-direction: row-reverse;
+}
+    
+
+    .footer {
+        background: linear-gradient(45deg, #e3fdfd, #ffe6fa);
+        color: black;
+        text-align: center;
+        font-weight: bold;
+        padding: 15px;
+        margin-top: 35px;
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+    .company-policies {
+        padding: 40px 15px;
+    }
+
+    .policies-section {
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .policies-left,
+    .policies-right {
+        text-align: center;
+    }
+
+    .policies-section h3 {
+        font-size: 22px;
+    }
+
+    .policies-section p {
+        font-size: 16px;
+    }
+}
+
+</style>
+
+
+
+<div class="navbar-container">
+    <nav class="navbar">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-center">
+            <div class="nav-item">
+                <a href="{% if user['role'] == 'IT' %}{{ url_for('it_bp.it_dashboard') }}{% else %}{{ url_for('user_bp.dashboard') }}{% endif %}">Home</a>
+            </div>
+            <div class="nav-item"><a href="/overview">Company Overview</a></div>
+            <div class="nav-item"><a href="/policies">Company Policies</a></div>
+            <div class="nav-item"><a href="/history">Company History</a></div>
+        </div>
+    </nav>
+   
+</div>
+
+<div class="cont">
+    <h2>Company Rules and Policies</h2>
+</div>
+
+<main class="company-policies">
+    <div class="policies-container">
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 1.  Punctuality</h3>
+                <p>Employees are expected to arrive on time for their shifts and meetings. Late arrivals should be communicated in advance.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 2. Dress Code</h3>
+                <p>All employees must adhere to the company’s dress code policy, ensuring professional and appropriate attire at all times..</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 3. Workplace Conduct</h3>
+                <p>Employees must treat colleagues with respect and maintain a professional environment, free from harassment or discrimination.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 4. Confidentiality</h3>
+                <p>Sensitive company information must be kept confidential and not shared outside of authorized personnel.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 5. Use of Company Property</h3>
+                <p>Company resources, including computers and office supplies, should be used for business purposes only.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-right">
+            <div>
+                <h3>🔹 6. Internet and Email Usage</h3>
+                <p>Company email and internet should be used responsibly, avoiding unauthorized access or misuse.</p>
+            </div>
+        </div>
+
+        <div class="policies-section policies-left">
+            <div>
+                <h3>🔹 7. Safety and Security</h3>
+                <p>Employees must follow safety protocols to ensure a secure working environment. Report any hazards immediately.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<footer class="footer">
+    <p>© 2025 Hiresync. All rights reserved.</p>
+</footer>
+
+<script>
+    function buttonClick(event, pageUrl) {
+        window.location.href = pageUrl;
+    }
+</script>
+{% endblock %}

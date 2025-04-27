@@ -1,0 +1,215 @@
+
+<script>
+    // Prevent Browser from Caching the Page After Logout
+    (function() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onload = function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        };
+    })();
+</script>
+
+{% block content %}
+<style>
+    /* Full-Screen Layout Adjustments */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #f8f9fa;
+        padding-top: 50px; /* Prevent content from being hidden under the fixed navbar */
+    }
+
+    /* Fixed Navbar with Spacing */
+    .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 25px;
+        background-color: #f67b2f;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 98%;  /* Fix width issue */
+        z-index: 1000;
+        height: 70px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        padding: 20px 0;
+    }
+
+    .navbar-brand {
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        margin-right: auto;
+    }
+
+    .nav-center {
+        display: flex;
+        font-size: 20px;
+        gap: 15px;
+        margin: auto;
+    }
+
+    .nav-item a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px 15px;
+    }
+
+    .nav-item a:hover {
+        text-decoration: underline;
+    }
+
+    .logout-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #df0218;
+    }
+
+    /* Container for Welcome Section */
+    .cont {
+        font-size: 25px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 20px auto;
+        width: 97%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .company-overview {
+        text-align: center;
+        padding: 60px 20px;
+        background: #ffffff;
+    }
+
+    .overview-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 30px;
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .overview-left img {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .overview-right {
+        max-width: 600px;
+        text-align: left;
+    }
+
+    .overview-right h2, .overview-right h3 {
+        color: #ff6600;
+    }
+
+    .overview-right p {
+        font-size: 18px;
+        color: #444;
+        line-height: 1.6;
+    }
+
+    .footer {
+        background: linear-gradient(45deg, #e3fdfd, #ffe6fa);
+        color: black;
+        text-align: center;
+        font-weight: bold;
+        padding: 15px;
+        margin-top: 5px;
+    }
+
+    /* Mobile Optimization */
+    @media screen and (max-width: 1024px) {
+        .grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .navbar-container {
+            flex-direction: column;
+            text-align: center;
+        }
+        .nav-center {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .grid {
+            grid-template-columns: repeat(1, 1fr);
+        }
+        .overview-content {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="navbar-container">
+    <nav class="navbar">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-center">
+            <div class="nav-item"><a href="/dashboard">Home</a></div>
+            <div class="nav-item"><a href="/overview">Company Overview</a></div>
+            <div class="nav-item"><a href="/policies">Company Policies</a></div>
+            <div class="nav-item"><a href="/history">Company History</a></div>
+        </div>
+    </nav>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
+
+<main class="company-overview">
+    <div class="overview-content">
+        <div class="overview-left img">
+            <img src="{{ url_for('static', filename='photos/Hiresync_office.jpg') }}" alt="Background Image">
+        </div>
+        <div class="overview-right">
+            <h2>About Hiresync</h2>
+            <p>Hiresync is a leading HR technology company that specializes in providing automated onboarding and offboarding solutions for businesses. 
+               Our platform simplifies employee management, ensuring a seamless transition for new hires and departing employees. 
+               With a commitment to innovation, efficiency, and compliance, Hiresync is designed to streamline HR processes and enhance workforce management.</p>
+            <h3>Our Mission</h3>
+            <p>To revolutionize HR processes through cutting-edge automation, ensuring businesses can efficiently manage their employees with ease and accuracy.</p>
+            <h3>Our Vision</h3>
+            <p>To be the global leader in HR automation, providing seamless and intelligent solutions for workforce management.</p>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <p>© 2025 Hiresync. All rights reserved.</p>
+</footer>
+
+<script>
+    function buttonClick(event, pageUrl) {
+        window.location.href = pageUrl;
+    }
+</script>
+{% endblock %}

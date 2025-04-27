@@ -5,58 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Exit Interviews</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid black; padding: 10px; text-align: center; }
-        .approve-btn { color: white; background-color: green; padding: 5px 10px; border: none; cursor: pointer; }
-        .decline-btn { color: white; background-color: red; padding: 5px 10px; border: none; cursor: pointer; }
-        .delete-btn { color: white; background-color: gray; padding: 5px 10px; border: none; cursor: pointer; }
+        /* ✅ General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+        }
+
+        /* ✅ Navigation Bar */
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background-color: #f67b2f;
+            position: fixed;
+            top: 0;
+            width: 98%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+            padding: 8px 15px;
+            background-color: #d65f1a;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .nav-item a:hover {
+            background-color: #e46b20;
+        }
+
+        /* ✅ Page Heading */
+        h2 {
+            text-align: center;
+            margin-top: 80px;
+            font-size: 24px;
+        }
+
+        /* ✅ Centered Table */
+        .table-container {
+            width: 90%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* ✅ Button Styling */
+        .approve-btn, .decline-btn, .delete-btn {
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .approve-btn {
+            background-color: #28a745;
+        }
+
+        .approve-btn:hover {
+            background-color: #218838;
+        }
+
+        .decline-btn {
+            background-color: #dc3545;
+        }
+
+        .decline-btn:hover {
+            background-color: #c82333;
+        }
+
+        .delete-btn {
+            background-color: #6c757d;
+        }
+
+        .delete-btn:hover {
+            background-color: #5a6268;
+        }
+
+        /* ✅ Centered "No Data" Message */
+        .no-data {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
 
-<h2>Manage Exit Interview Requests</h2>
-<a href="{{ url_for('it_bp.it_dashboard') }}" class="dashboard-button">Go to IT Dashboard</a>
+    <!-- ✅ Navigation Bar -->
+    <nav class="navbar-container">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-item">
+            <a href="{{ url_for('it_bp.it_dashboard') }}">Back</a>
+        </div>
+    </nav>
 
-{% if exit_interviews %}
-    <table>
-        <tr>
-            <th>User</th>
-            <th>Scheduled Date</th>
-            <th>Requested New Date</th>
-            <th>Action</th>
-        </tr>
-        {% for interview in exit_interviews %}
-        <tr>
-            <td>{{ interview.user_name }}</td> <!-- ✅ Display User's Name -->
-            <td>{{ interview.scheduled_date }}</td>
-            <td>
-                {% if interview.user_requested_change %}
-                    {{ interview.user_requested_change.new_date }} ({{ interview.user_requested_change.status }})
-                {% else %}
-                    No reschedule requested
-                {% endif %}
-            </td>
-            <td>
-                <form method="POST" style="display:inline;">
-                    <input type="hidden" name="interview_id" value="{{ interview._id }}">
+    <!-- ✅ Page Title -->
+    <h2>Manage Exit Interview Requests</h2>
 
-                    <!-- ✅ Show Approve/Decline Buttons Only if Pending Request Exists -->
-                    {% if interview.user_requested_change and interview.user_requested_change.status == "Pending Approval" %}
-                        <button type="submit" name="action" value="approve" class="approve-btn">✅ Approve</button>
-                        <button type="submit" name="action" value="decline" class="decline-btn">❌ Decline</button>
-                    {% endif %}
+    <div class="table-container">
+        {% if exit_interviews %}
+            <table>
+                <tr>
+                    <th>User</th>
+                    <th>Scheduled Date</th>
+                    <th>Requested New Date</th>
+                    <th>Action</th>
+                </tr>
+                {% for interview in exit_interviews %}
+                <tr>
+                    <td>{{ interview.user_name }}</td> <!-- ✅ Display User's Name -->
+                    <td>{{ interview.scheduled_date }}</td>
+                    <td>
+                        {% if interview.user_requested_change %}
+                            {{ interview.user_requested_change.new_date }} ({{ interview.user_requested_change.status }})
+                        {% else %}
+                            No reschedule requested
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="interview_id" value="{{ interview._id }}">
 
-                    <!-- 🗑️ Delete Button Always Visible -->
-                    <button type="submit" name="action" value="delete" class="delete-btn">🗑️ Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-{% else %}
-    <p>No exit interviews scheduled.</p>
-{% endif %}
+                            <!-- ✅ Show Approve/Decline Buttons Only if Pending Request Exists -->
+                            {% if interview.user_requested_change and interview.user_requested_change.status == "Pending Approval" %}
+                                <button type="submit" name="action" value="approve" class="approve-btn">✅ Approve</button>
+                                <button type="submit" name="action" value="decline" class="decline-btn">❌ Decline</button>
+                            {% endif %}
+
+                            <!-- 🗑️ Delete Button Always Visible -->
+                            <button type="submit" name="action" value="delete" class="delete-btn">🗑️ Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p class="no-data">No exit interviews scheduled.</p>
+        {% endif %}
+    </div>
 
 </body>
 </html>

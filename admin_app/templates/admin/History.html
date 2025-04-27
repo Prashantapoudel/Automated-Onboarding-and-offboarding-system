@@ -1,0 +1,266 @@
+<script>
+    // Prevent Browser from Caching the Page After Logout
+    (function() {
+        window.history.replaceState(null, null, window.location.href);
+        window.onload = function () {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        };
+    })();
+</script>
+
+{% block content %}
+<style>
+    /* Full-Screen Layout Adjustments */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #f8f9fa;
+        padding-top: 50px; /* Prevent content from being hidden under the fixed navbar */
+    }
+
+    /* Fixed Navbar with Spacing */
+    .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        background-color: #f67b2f;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 98%;
+        z-index: 1000;
+        height: 70px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        padding: 20px 0;
+    }
+
+    .navbar-brand {
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        margin-right: auto;
+    }
+
+    .nav-center {
+        display: flex;
+        font-size: 20px;
+        gap: 15px;
+        margin: auto;
+    }
+
+    .nav-item a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 10px 15px;
+    }
+
+    .nav-item a:hover {
+        text-decoration: underline;
+    }
+
+    .logout-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #df0218;
+    }
+
+    /* Container for Welcome Section */
+    .cont {
+        font-size: 25px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 20px auto;
+        width: 97%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .company-history {
+        text-align: center;
+        padding: 60px 20px;
+        background: #ffffff;
+    }
+
+    .history-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .history-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 90%;
+        max-width: 1000px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .history-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        background: #e3f2fd;
+    }
+
+    .history-section h3 {
+        font-size: 24px;
+        color: #ff6600;
+        margin-bottom: 10px;
+    }
+
+    .history-section p {
+        font-size: 18px;
+        color: #444;
+        line-height: 1.6;
+    }
+
+    .history-left {
+        text-align: left;
+    }
+
+    .history-right {
+        text-align: right;
+    }
+
+    /* Alternate history sections for left and right alignment */
+    .history-section:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    /* Main tag styles */
+    main {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer {
+        background: linear-gradient(45deg, #e3fdfd, #ffe6fa);
+        color: black;
+        text-align: center;
+        font-weight: bold;
+        padding: 15px;
+        margin-top: 35px;
+    }
+
+    /* Mobile Optimization */
+    @media screen and (max-width: 1024px) {
+        .grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media screen and (max-width: 768px) {
+        .navbar-container {
+            flex-direction: column;
+            text-align: center;
+        }
+        .nav-center {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .grid {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+</style>
+
+
+<div class="navbar-container">
+    <nav class="navbar">
+        <a class="navbar-brand" href="#">HireSync</a>
+        <div class="nav-center">
+            <div class="nav-item"><a href="/dashboard">Home</a></div>
+            <div class="nav-item"><a href="/overview">Company Overview</a></div>
+            <div class="nav-item"><a href="/policies">Company Policies</a></div>
+            <div class="nav-item"><a href="/history">Company History</a></div>
+        </div>
+    </nav>
+    <a href="/logout" class="logout-btn">Logout</a>
+</div>
+
+<div class="cont">
+    <h2>Company History</h2>
+</div>
+
+<main class="company-history"> 
+    <div class="history-container">
+        <div class="history-section history-left">
+            <div>
+                <h3>🔹 2015: The Beginning</h3>
+                <p>Hiresync was founded with a vision to simplify HR automation and workforce management. Our journey began as a small startup with a strong passion for innovation.</p>
+            </div>
+        </div>
+
+        <div class="history-section history-right">
+            <div>
+                <h3>🔹 2017: First Major Milestone</h3>
+                <p>We launched our first automated onboarding and offboarding system, gaining attention from small and mid-sized businesses.</p>
+            </div>
+        </div>
+
+        <div class="history-section history-left">
+            <div>
+                <h3>🔹 2019: Expansion & Growth</h3>
+                <p>Hiresync expanded internationally, partnering with enterprises to streamline employee management globally.</p>
+            </div>
+        </div>
+
+        <div class="history-section history-right">
+            <div>
+                <h3>🔹 2022: AI & Automation Integration</h3>
+                <p>We introduced AI-driven HR solutions, improving efficiency and user experience through intelligent automation.</p>
+            </div>
+        </div>
+
+        <div class="history-section history-left">
+            <div>
+                <h3>🔹 2024-Present: The Future of HR Tech</h3>
+                <p>Hiresync continues to innovate, offering cutting-edge HR solutions that revolutionize how businesses manage their employees.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <p>© 2025 Hiresync. All rights reserved.</p>
+</footer>
+
+<script>
+    function buttonClick(event, pageUrl) {
+        window.location.href = pageUrl;
+    }
+</script>
+{% endblock %}
